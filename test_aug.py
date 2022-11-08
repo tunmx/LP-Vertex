@@ -27,7 +27,7 @@ seq = iaa.Sequential([  # 建立一个名为seq的实例，定义增强方法，
     # iaa.Rotate((-30, 30)),
     iaa.Multiply((0.25, 1.75)),  # 改变亮度, 不影响bounding box
     iaa.ContrastNormalization((0.8, 1.2)),  # 对比度
-    iaa.GammaContrast((0.8, 1.5), per_channel=True),    # 随机颜色变换
+    iaa.GammaContrast((0.9, 1.2), per_channel=True),    # 随机颜色变换
     # iaa.Sequential([
     #         iaa.Dropout(p=0.005),  # 随机删除像素点
     #     ]),
@@ -43,6 +43,8 @@ seq = iaa.Sequential([  # 建立一个名为seq的实例，定义增强方法，
         cval=0,  # 全白全黑填充
         mode="constant"  # 定义填充图像外区域的方法
     )),
+
+    iaa.Resize((112, 112), ),
 ])
 
 root = "/Users/tunm/datasets/oinbagCrawler_vertex/data/"
@@ -64,7 +66,7 @@ for path in list_:
     print(kpsoi.keypoints)
     # ia.imshow(kpsoi.draw_on_image(image, size=7))
 
-    size = 256
+    size = 112
 
     show_list = list()
     for _ in range(9):
@@ -76,7 +78,7 @@ for path in list_:
             cv2.line(img_aug, (x, y), (x, y), (100, 100, 255), 9)
         # cv2.imshow("s", img_aug)
         # cv2.waitKey(0)
-        img_aug = cv2.resize(img_aug, (size, size))
+        # img_aug = cv2.resize(img_aug, (size, size))
         show_list.append(img_aug)
 
     show_list = np.asarray(show_list)

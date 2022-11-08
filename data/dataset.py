@@ -5,6 +5,8 @@ import torch
 import numpy as np
 from torch.utils.data import Dataset
 import os
+from .transform import Pipeline
+
 
 
 def _load_label(path: str) -> dict:
@@ -34,21 +36,30 @@ def _load_data(img_path, labels_path):
 
 class VertexDataset(Dataset, ABC):
 
-    def __init__(self, img_path, labels_path=None, mode='train'):
+    def __init__(self, img_path, labels_path=None, mode='train', transform=None):
         self.img_path = img_path
         if labels_path:
             self.labels_path = labels_path
         else:
             self.labels_path = img_path
         self.mode = mode
+        if self.transform:
+            self.transform = transform
+        else:
+            self.transform = Pipeline()
         self.data_list = _load_data(self.img_path, self.labels_path)
 
     def __len__(self):
         return len(self.data_list)
 
+    def __getitem__(self, idx):
+        pass
+
     def _get_train_data(self, idx):
         data = self.data_list[idx]
         image_path = data['image']
-        label_path = data['label']
+        label_kps = data['label']
         image = cv2.imdecode(np.fromfile(image_path, dtype=np.uint8), cv2.IMREAD_COLOR)
-        width, height, channel = image.shape
+
+        return self.transform(image, label_kps)
+
