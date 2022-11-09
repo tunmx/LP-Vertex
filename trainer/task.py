@@ -64,7 +64,7 @@ class TrainTask(object):
             train_bar.set_description("train epoch[{}/{}] loss:{:.3f}".format(
                 epoch + 1, epoch_num, train_loss))
             # 验证集
-            val_loss, val_acc = self.validation_one_epoch(val_data)
+            val_loss = self.validation_one_epoch(val_data)
             val_bar.set_description("val epoch[{}/{}] loss:{:.3f}".format(
                 epoch + 1, epoch_num, val_loss))
             if is_save:
@@ -72,7 +72,6 @@ class TrainTask(object):
 
             self.writer.add_scalar('loss/train', train_loss, epoch)
             self.writer.add_scalar('loss/val', val_loss, epoch)
-            self.writer.add_scalar('accuracy/val', val_acc, epoch)
             self.writer.add_scalar('lr/epoch', self.lr_scheduler.get_last_lr()[0], epoch)
 
         logger.info("This training is completed, a total of {} rounds of training, training time: {} minutes" \
@@ -108,7 +107,7 @@ class TrainTask(object):
                 # val_images[0] = np.
                 outputs = self.model(val_images.to(self.task_device))
                 loss = self.loss_func(outputs, val_labels.to(self.task_device))
-                val_loss += loss
+                val_loss += loss.item()
                 predict = torch.argmax(outputs, dim=1)
                 accuracy = Accuracy().to(self.task_device)(predict.to(self.task_device),
                                                            val_labels.to(self.task_device))
