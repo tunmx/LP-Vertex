@@ -1,14 +1,15 @@
 import json
 from abc import ABCMeta, abstractmethod, ABC
 import cv2
-import torch
 import numpy as np
+import tqdm
 from torch.utils.data import Dataset
 import os
 from .transform import Pipeline
+from loguru import logger
 
 
-
+@abstractmethod
 def _load_label(path: str) -> dict:
     with open(path, "r") as f:
         result = json.load(f)
@@ -16,11 +17,13 @@ def _load_label(path: str) -> dict:
     return result
 
 
+@abstractmethod
 def _load_data(img_path, labels_path):
     results = list()
     list_ = [os.path.join(img_path, item) for item in os.listdir(img_path) if
              item.split('.')[-1].lower() in ['jpg', 'png', 'jpeg']]
-    for idx, path in enumerate(list_):
+    logger.info("加载数据中")
+    for idx, path in enumerate(tqdm.tqdm(list_)):
         basename = os.path.basename(path)
         label = "".join(basename.split('.')[:-1]) + ".json"
         label_full = os.path.join(labels_path, label)
@@ -43,7 +46,7 @@ class VertexDataset(Dataset, ABC):
         else:
             self.labels_path = img_path
         self.mode = mode
-        if self.transform:
+        if transform:
             self.transform = transform
         else:
             self.transform = Pipeline()
@@ -53,7 +56,10 @@ class VertexDataset(Dataset, ABC):
         return len(self.data_list)
 
     def __getitem__(self, idx):
-        pass
+        if self.mode == 'val' or self.mode == 'test':
+            return self._get_val_data(idx)
+        else:
+            return self._get_train_data(idx)
 
     def _get_train_data(self, idx: int) -> tuple:
         data = self.data_list[idx]
