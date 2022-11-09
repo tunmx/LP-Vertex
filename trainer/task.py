@@ -109,8 +109,8 @@ class TrainTask(object):
                 loss = self.loss_func(outputs, val_labels.to(self.task_device))
                 val_loss += loss.item()
                 predict = torch.argmax(outputs, dim=1)
-                accuracy = Accuracy().to(self.task_device)(predict.to(self.task_device),
-                                                           val_labels.to(self.task_device))
+                # accuracy = Accuracy().to(self.task_device)(predict.to(self.task_device),
+                #                                            val_labels.to(self.task_device))
                 # val_acc += accuracy
 
         return val_loss / len(val_bar)
