@@ -12,7 +12,11 @@ class Pipeline(object):
         # 定义一个lambda表达式，以p=0.5的概率去执行sometimes传递的图像增强
         sometimes = lambda aug: iaa.Sometimes(0.5, aug)
 
-        self.seq = iaa.Sequential([  # 建立一个名为seq的实例，定义增强方法，用于增强
+        self.val_seq = iaa.Sequential([
+            iaa.Resize((112, 112), ),
+        ])
+
+        self.train_seq = iaa.Sequential([  # 建立一个名为seq的实例，定义增强方法，用于增强
             sometimes(iaa.Crop(percent=(0, 0.1))),
             iaa.Fliplr(0.5),  # 对百分之五十的图像进行做左右翻转
             iaa.GaussianBlur((0, 1.0)),  # 在模型上使用0均值1方差进行高斯模糊
@@ -38,7 +42,9 @@ class Pipeline(object):
             iaa.Resize((112, 112), ),
         ])
 
-    def _transform_one(self, image: np.ndarray, points: np.ndarray) -> tuple:
+        self.seq_map = dict(train=self.train_seq, val=self.val_seq)
+
+    def _transform_one(self, image: np.ndarray, points: np.ndarray, mode='train') -> tuple:
         kps = [
             ia.Keypoint(x=points[0][0], y=points[0][1]),
             ia.Keypoint(x=points[1][0], y=points[1][1]),
@@ -46,12 +52,12 @@ class Pipeline(object):
             ia.Keypoint(x=points[3][0], y=points[3][1]),
         ]
         kpsoi = ia.KeypointsOnImage(kps, shape=image.shape)
-        aug_det = self.seq.to_deterministic()
+        aug_det = self.seq_map[mode].to_deterministic()
         img_aug = aug_det.augment_image(image)
         kps_aug = aug_det.augment_keypoints(kpsoi)
         kps_out = kps_aug.get_coords_array()
 
         return img_aug, kps_out
 
-    def __call__(self, image: np.ndarray, points: np.ndarray, *args, **kwargs) -> tuple:
-        return self._transform_one(image, points)
+    def __call__(self, image: np.ndarray, points: np.ndarray, mode='train', *args, **kwargs) -> tuple:
+        return self._transform_one(image, points, mode=mode)

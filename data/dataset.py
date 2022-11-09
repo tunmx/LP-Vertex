@@ -55,11 +55,18 @@ class VertexDataset(Dataset, ABC):
     def __getitem__(self, idx):
         pass
 
-    def _get_train_data(self, idx):
+    def _get_train_data(self, idx: int) -> tuple:
         data = self.data_list[idx]
         image_path = data['image']
         label_kps = data['label']
         image = cv2.imdecode(np.fromfile(image_path, dtype=np.uint8), cv2.IMREAD_COLOR)
 
-        return self.transform(image, label_kps)
+        return self.transform(image, label_kps, mode='train')
 
+    def _get_val_data(self, idx: int) -> tuple:
+        data = self.data_list[idx]
+        image_path = data['image']
+        label_kps = data['label']
+        image = cv2.imdecode(np.fromfile(image_path, dtype=np.uint8), cv2.IMREAD_COLOR)
+
+        return self.transform(image, label_kps, mode='val')
