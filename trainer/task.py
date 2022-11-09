@@ -8,7 +8,7 @@ from model.loss import loss_function
 from torch.utils.tensorboard import SummaryWriter
 import datetime
 from torch.utils.data import DataLoader
-
+from loguru import logger
 
 class TrainTask(object):
     def __init__(self, model, save_dir, loss_func, optimizer_option, lr_schedule_option, weight_path=None):
@@ -90,6 +90,10 @@ class TrainTask(object):
             outputs = self.model(samples.to(self.task_device))
             loss = self.loss_func(outputs, labels.to(self.task_device))
             loss.backward()
+
+            if step % 20 == 0:
+                logger.info(f"train loss: {loss}")
+
             self.optimizer.step()
             self.scheduler.step()
 
@@ -111,6 +115,7 @@ class TrainTask(object):
                 # accuracy = Accuracy().to(self.task_device)(predict.to(self.task_device),
                 #                                            val_labels.to(self.task_device))
                 # val_acc += accuracy
+
 
         return val_loss / len(val_bar)
 
