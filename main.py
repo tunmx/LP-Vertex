@@ -24,7 +24,7 @@ task_option = dict(model=net, save_dir='save_dir', loss_func='mse_loss', lr_sche
 
 task = TrainTask(**task_option)
 
-task.train(train_dataloader, val_dataloader, epoch_num=10, is_save=True)
+task.train(train_dataloader, val_dataloader, epoch_num=100, is_save=True)
 
 if __name__ == '__main__':
     pass
