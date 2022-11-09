@@ -4,8 +4,8 @@ from model.shuffle_vertex import ShuffleVertex
 from torch.utils.data import DataLoader
 from trainer.task import TrainTask
 
-train_dir = "/Users/tunm/datasets/oinbagCrawler_vertex_train/train"
-val_dir = "/Users/tunm/datasets/oinbagCrawler_vertex_train/val"
+train_dir = "oinbagCrawler_vertex_train/train"
+val_dir = "oinbagCrawler_vertex_train/val"
 batch_size = 32
 
 train_dataset = VertexDataset(train_dir, mode='train', is_show=False)
