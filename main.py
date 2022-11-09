@@ -1,16 +1,31 @@
-# This is a sample Python script.
+import torch
+from data import VertexDataset
+from model.shuffle_vertex import ShuffleVertex
+from torch.utils.data import DataLoader
+from trainer.task import TrainTask
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+train_dir = "/Users/tunm/datasets/oinbagCrawler_vertex_train/train"
+val_dir = "/Users/tunm/datasets/oinbagCrawler_vertex_train/val"
+batch_size = 32
 
+train_dataset = VertexDataset(train_dir, mode='train', is_show=False)
+train_dataloader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+val_dataset = VertexDataset(val_dir, mode='val', is_show=False)
+val_dataloader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=True)
 
+net = ShuffleVertex()
 
-# Press the green button in the gutter to run the script.
+lr_schedule_option = dict(name='ExponentialLR', gamma=0.9)
+optimizer_option = dict(name='Adam', lr=0.01, weight_decay=0.0001)
+
+task_option = dict(model=net, save_dir='save_dir', loss_func='mse_loss', lr_schedule_option=lr_schedule_option,
+                   optimizer_option=optimizer_option, weight_path=None)
+
+task = TrainTask(**task_option)
+
+task.train(train_dataloader, val_dataloader, epoch_num=10, is_save=True)
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    pass
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/

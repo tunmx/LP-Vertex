@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from backbone import ShuffleNetV2
+from .backbone import ShuffleNetV2
 
 
 class ShuffleVertex(nn.Module):
@@ -20,6 +20,7 @@ class ShuffleVertex(nn.Module):
         x = x.view(x.size(0), -1)
         x = self.linear(x)
         return x
+
 
 if __name__ == '__main__':
     net = ShuffleVertex()
