@@ -134,7 +134,7 @@ class TrainTask(object):
 
     def save_model(self, loss, epoch, mode='min'):
         torch.save(self.model.state_dict(), os.path.join(
-            self.save_dir, 'last.pth'))
+            self.save_dir, 'last_t0.pth'))
         if mode == 'min':
             # 根据损失率最小保存
             if loss < self.best_loss:

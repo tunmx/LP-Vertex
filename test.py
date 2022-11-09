@@ -8,7 +8,7 @@ import torch
 
 device = torch.device("cpu")
 net = ShuffleVertex()
-net.load_state_dict(torch.load("save_dir/last.pth", map_location="cpu"))
+net.load_state_dict(torch.load("save_dir/last_t0.pth", map_location="cpu"))
 net.to(device)
 
 batch_size = 128
