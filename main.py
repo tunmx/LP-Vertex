@@ -17,7 +17,7 @@ val_dataloader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=
 net = ShuffleVertex()
 
 lr_schedule_option = dict(name='ExponentialLR', gamma=0.9)
-optimizer_option = dict(name='Adam', lr=0.001, weight_decay=0.0001)
+optimizer_option = dict(name='Adam', lr=0.01, weight_decay=0.0001)
 
 task_option = dict(model=net, save_dir='save_dir', loss_func='mse_loss', lr_schedule_option=lr_schedule_option,
                    optimizer_option=optimizer_option, weight_path=None)
