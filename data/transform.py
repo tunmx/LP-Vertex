@@ -17,11 +17,11 @@ class Pipeline(object):
         ])
 
         self.train_seq = iaa.Sequential([  # 建立一个名为seq的实例，定义增强方法，用于增强
-            sometimes(iaa.Crop(percent=(0, 0.4))),
+            sometimes(iaa.Crop(percent=(0, 0.1))),
             iaa.Fliplr(0.5),  # 对百分之五十的图像进行做左右翻转
             iaa.GaussianBlur((0, 1.0)),  # 在模型上使用0均值1方差进行高斯模糊
             # iaa.Rotate((-30, 30)),
-            iaa.Multiply((0.5, 1.5)),  # 改变亮度, 不影响bounding box
+            iaa.Multiply((0.25, 1.55)),  # 改变亮度, 不影响bounding box
             iaa.ContrastNormalization((0.8, 1.2)),  # 对比度
             iaa.GammaContrast((0.9, 1.2), per_channel=True),  # 随机颜色变换
             # iaa.Sequential([
@@ -30,7 +30,7 @@ class Pipeline(object):
 
             # 对一部分图像做仿射变换
             sometimes(iaa.Affine(
-                scale={"x": (0.8, 1.4), "y": (0.8, 1.4)},  # 图像缩放为80%到120%之间
+                scale={"x": (0.8, 1.6), "y": (0.8, 1.6)},  # 图像缩放为80%到120%之间
                 translate_percent={"x": (-0.15, 0.15), "y": (-0.15, 0.15)},  # 平移±20%之间
                 rotate=(-25, 25),  # 旋转±45度之间
                 shear=(-25, 25),  # 剪切变换±16度，（矩形变平行四边形）
