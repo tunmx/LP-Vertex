@@ -80,6 +80,7 @@ class TrainTask(object):
     def train_one_epoch(self, train_data):
         global loss
         self.model.train()
+        self.scheduler.step()
         # train_acc = 0.0
         train_bar = tqdm(train_data)
         for step, data in enumerate(train_bar):
@@ -94,7 +95,6 @@ class TrainTask(object):
             # accuracy = Accuracy().to(self.task_device)(predict.to(self.task_device), labels.to(self.task_device))
             # train_acc += accuracy
 
-        self.scheduler.step()
         return loss.item()
 
     def validation_one_epoch(self, val_data):
