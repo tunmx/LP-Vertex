@@ -93,13 +93,10 @@ class TrainTask(object):
             self.optimizer.step()
             self.scheduler.step()
 
-            predict = torch.argmax(outputs, dim=1)
-            # accuracy = Accuracy().to(self.task_device)(predict.to(self.task_device), labels.to(self.task_device))
-            # train_acc += accuracy
-
         return loss.item()
 
     def validation_one_epoch(self, val_data):
+        self.model.eval()
         val_loss = 0.0
         # val_acc = 0.0
         with torch.no_grad():
