@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-
+import torch.nn.functional as f
 from .backbone import ShuffleNetV2
 
 
@@ -12,6 +12,7 @@ class ShuffleVertex(nn.Module):
         self.conv1 = nn.Conv2d(1024, 128, 1, 1, 0, bias=False)
         self.pool1 = nn.AvgPool2d(4, stride=1)
         self.linear = nn.Linear(128, 8)
+        self.relu6 = nn.ReLU6()
 
     def forward(self, x):
         x = self.backbone(x)
@@ -19,6 +20,7 @@ class ShuffleVertex(nn.Module):
         x = self.pool1(x)
         x = x.view(x.size(0), -1)
         x = self.linear(x)
+        x = self.relu6(x)
         return x
 
 
