@@ -18,7 +18,7 @@ class ShuffleVertex(nn.Module):
 
     def forward(self, x):
         x = self.backbone(x)
-        print(x.shape)
+        # print(x.shape)
         x = self.pool1(x)
         x = x.view(x.size(0), -1)
         x = self.linear(x)
