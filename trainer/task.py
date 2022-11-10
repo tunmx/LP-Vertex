@@ -99,7 +99,7 @@ class TrainTask(object):
         val_loss = 0.0
         # val_acc = 0.0
         with torch.no_grad():
-            val_bar = tqdm(val_data, bar_format='{desc}|{bar}|{percentage:3.0f}%')
+            val_bar = tqdm(val_data')
             for step, data in enumerate(val_bar):
                 val_images, val_labels = data
                 # val_images[0] = np.
