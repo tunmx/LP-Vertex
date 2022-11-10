@@ -11,7 +11,7 @@ net = ShuffleVertex()
 net.load_state_dict(torch.load("save_dir/last.pth", map_location="cpu"))
 net.to(device)
 
-batch_size = 128
+batch_size = 256
 val_dir = "oinbagCrawler_vertex_train/val"
 val_dataset = LabelMeDataset(val_dir, mode='val', is_show=False)
 val_dataloader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=True)
