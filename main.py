@@ -16,7 +16,7 @@ val_dataset = VertexDataset(val_dir, mode='val', is_show=False)
 val_dataloader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=True)
 
 logger.info(f"Training Dataset Total: {len(train_dataset)}")
-logger.info(f"Verification Dataset Total: {len(val_dataloader)}")
+logger.info(f"Verification Dataset Total: {len(val_dataset)}")
 
 net = ShuffleVertex()
 
