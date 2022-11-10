@@ -25,7 +25,6 @@ class TrainTask(object):
         self.best_accuracy = 0.0
         self.best_loss = 1000.0
         self.time_tag = datetime.datetime.now()
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
         if weight_path:
             self._load_pretraining_model(weight_path)
@@ -56,17 +55,13 @@ class TrainTask(object):
         logger.info(f"Training Dataset: {len(train_data)}, Validation Dataset: {len(val_data)}")
         logger.info(f"Training Epochs Total: {epoch_num}")
         logger.info(f"Training Result Save to {self.save_dir}")
-        train_bar = tqdm(train_data)
-        val_bar = tqdm(val_data)
         for epoch in range(epoch_num):
             # 训练集
-            train_loss = self.train_one_epoch(train_data)
-            train_bar.set_description("train epoch[{}/{}] loss:{:.3f}".format(
-                epoch + 1, epoch_num, train_loss))
+            train_loss = self.train_one_epoch(train_data, epoch, epoch_num)
+            # logger.info(f"Train Epoch[{epoch + 1}/{epoch_num}] train_loss: {train_loss}")
             # 验证集
             val_loss = self.validation_one_epoch(val_data)
-            val_bar.set_description("val epoch[{}/{}] loss:{:.3f}".format(
-                epoch + 1, epoch_num, val_loss))
+            logger.info(f"Train Epoch[{epoch + 1}/{epoch_num}] val_loss: {val_loss}")
             if is_save:
                 self.save_model(val_loss, epoch, mode='min')
 
@@ -77,11 +72,11 @@ class TrainTask(object):
         logger.info("This training is completed, a total of {} rounds of training, training time: {} minutes" \
                     .format(epoch_num, (datetime.datetime.now() - self.time_tag).seconds // 60))
 
-    def train_one_epoch(self, train_data):
+    def train_one_epoch(self, train_data, epoch, epochs_total):
         global loss
         self.model.train()
         # train_acc = 0.0
-        train_bar = tqdm(train_data)
+        train_bar = tqdm(train_data, bar_format='{desc}|{bar}|{percentage:3.0f}%')
         for step, data in enumerate(train_bar):
             samples, labels = data
             samples = samples.to(self.task_device)
@@ -91,11 +86,11 @@ class TrainTask(object):
             loss = self.loss_func(outputs, labels.to(self.task_device))
             loss.backward()
 
-            if step % 20 == 0:
-                logger.info(f"train loss: {loss}")
 
             self.optimizer.step()
             self.scheduler.step()
+
+            train_bar.set_description('epoch: [{}/{}] loss: {}'.format(epoch + 1, epochs_total, loss))
 
         return loss.item()
 
@@ -104,17 +99,14 @@ class TrainTask(object):
         val_loss = 0.0
         # val_acc = 0.0
         with torch.no_grad():
-            val_bar = tqdm(val_data)
+            val_bar = tqdm(val_data, bar_format='{desc}|{bar}|{percentage:3.0f}%')
             for step, data in enumerate(val_bar):
                 val_images, val_labels = data
                 # val_images[0] = np.
                 outputs = self.model(val_images.to(self.task_device))
                 loss = self.loss_func(outputs, val_labels.to(self.task_device))
                 val_loss += loss.item()
-                predict = torch.argmax(outputs, dim=1)
-                # accuracy = Accuracy().to(self.task_device)(predict.to(self.task_device),
-                #                                            val_labels.to(self.task_device))
-                # val_acc += accuracy
+
 
 
         return val_loss / len(val_bar)
