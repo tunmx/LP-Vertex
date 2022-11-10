@@ -10,7 +10,7 @@ class ShuffleVertex(nn.Module):
         super().__init__()
         self.backbone = ShuffleNetV2(model_size=model_size, pretrain=pretrain, with_last_conv=with_last_conv)
         self.pool1 = nn.AvgPool2d(4, stride=1)
-        self.linear = nn.Linear(704, 128)
+        self.linear = nn.Linear(464, 128)
         self.drop = nn.Dropout(0.25)
         # self.relu6 = nn.ReLU6()
         self.prelu1 = nn.PReLU()
