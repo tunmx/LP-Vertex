@@ -51,7 +51,7 @@ class TrainTask(object):
         # for param in self.model.features.parameters():
         #     param.requires_grad = False
 
-    def train(self, train_data: DataLoader, val_data: DataLoader, epoch_num: int, is_save=True):
+    def training(self, train_data: DataLoader, val_data: DataLoader, epoch_num: int, is_save=True):
         logger.info("Start training.")
         logger.info(f"Training Epochs Total: {epoch_num}")
         logger.info(f"Training Result Save to {self.save_dir}")
@@ -73,8 +73,8 @@ class TrainTask(object):
                     .format(epoch_num, (datetime.datetime.now() - self.time_tag).seconds // 60))
 
     def train_one_epoch(self, train_data, epoch, epochs_total):
-        global loss
-        self.model.train()
+        global loss_
+        self.model.training()
         # train_acc = 0.0
         train_bar = tqdm(train_data)
         for step, data in enumerate(train_bar):
@@ -83,15 +83,16 @@ class TrainTask(object):
             labels = labels.to(self.task_device)
             self.optimizer.zero_grad()
             outputs = self.model(samples.to(self.task_device))
-            loss = self.loss_func(outputs, labels.to(self.task_device))
-            loss.backward()
+            loss_ = self.loss_func(outputs, labels.to(self.task_device))
+            loss_.backward()
 
             self.optimizer.step()
             self.scheduler.step()
 
-            train_bar.set_description('Epoch: [{}/{}] loss: {:.3f}'.format(epoch + 1, epochs_total, loss))
+            train_bar.set_description('Epoch: [{}/{}] loss: {:.3f}: lr: {:.3f}'.format(epoch + 1, epochs_total, loss_,
+                                                                                       self.lr_scheduler.get_last_lr()))
 
-        return loss.item()
+        return loss_.item()
 
     def validation_one_epoch(self, val_data):
         self.model.eval()
