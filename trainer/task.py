@@ -90,7 +90,7 @@ class TrainTask(object):
             self.optimizer.step()
             self.scheduler.step()
 
-            train_bar.set_description('epoch: [{}/{}] loss: {}'.format(epoch + 1, epochs_total, loss))
+            train_bar.set_description('Epoch: [{}/{}] loss: {:.3f}'.format(epoch + 1, epochs_total, loss))
 
         return loss.item()
 
