@@ -52,7 +52,6 @@ class TrainTask(object):
 
     def train(self, train_data: DataLoader, val_data: DataLoader, epoch_num: int, is_save=True):
         logger.info("Start training.")
-        logger.info(f"Training Dataset: {len(train_data)}, Validation Dataset: {len(val_data)}")
         logger.info(f"Training Epochs Total: {epoch_num}")
         logger.info(f"Training Result Save to {self.save_dir}")
         for epoch in range(epoch_num):

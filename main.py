@@ -3,6 +3,7 @@ from data import VertexDataset
 from model.shuffle_vertex import ShuffleVertex
 from torch.utils.data import DataLoader
 from trainer.task import TrainTask
+from loguru import logger
 
 train_dir = "oinbagCrawler_vertex_train/train"
 val_dir = "oinbagCrawler_vertex_train/val"
@@ -13,6 +14,9 @@ train_dataloader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuf
 
 val_dataset = VertexDataset(val_dir, mode='val', is_show=False)
 val_dataloader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=True)
+
+logger.info(f"Training Dataset Total: {len(train_dataset)}")
+logger.info(f"Verification Dataset Total: {len(val_dataloader)}")
 
 net = ShuffleVertex()
 
