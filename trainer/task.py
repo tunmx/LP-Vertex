@@ -90,7 +90,8 @@ class TrainTask(object):
             self.scheduler.step()
 
             train_bar.set_description('Epoch: [{}/{}] loss: {:.3f}: lr: {:.3f}'.format(epoch + 1, epochs_total, loss_,
-                                                                                       self.lr_scheduler.get_last_lr()))
+                                                                                       self.model.optimizer.state_dict()[
+                                                                                           'param_groups'][0]['lr']))
 
         return loss_.item()
 
