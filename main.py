@@ -7,7 +7,7 @@ from loguru import logger
 
 train_dir = "oinbagCrawler_vertex_train/train"
 val_dir = "oinbagCrawler_vertex_train/val"
-batch_size = 256
+batch_size = 192
 
 train_dataset = LabelMeDataset(train_dir, mode='train', is_show=False)
 train_dataloader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
