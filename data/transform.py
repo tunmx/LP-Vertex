@@ -38,7 +38,7 @@ class Pipeline(object):
                 mode="constant"  # 定义填充图像外区域的方法
             )),
 
-            iaa.Resize((96, 96), ),
+            iaa.Resize((112, 112), ),
         ])
 
         self.seq_map = dict(train=self.train_seq, val=self.val_seq)
