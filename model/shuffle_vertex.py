@@ -6,7 +6,7 @@ from .backbone import ShuffleNetV2
 
 class ShuffleVertex(nn.Module):
 
-    def __init__(self, model_size='1.5x', pretrain=True, with_last_conv=False):
+    def __init__(self, model_size='1.0x', pretrain=True, with_last_conv=False):
         super().__init__()
         self.backbone = ShuffleNetV2(model_size=model_size, pretrain=pretrain, with_last_conv=with_last_conv)
         self.pool1 = nn.AvgPool2d(4, stride=1)
