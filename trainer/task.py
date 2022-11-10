@@ -76,7 +76,7 @@ class TrainTask(object):
         global loss
         self.model.train()
         # train_acc = 0.0
-        train_bar = tqdm(train_data, bar_format='{desc}|{bar}|{percentage:3.0f}%')
+        train_bar = tqdm(train_data)
         for step, data in enumerate(train_bar):
             samples, labels = data
             samples = samples.to(self.task_device)
