@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as f
-from backbone import ShuffleNetV2
+from .backbone import ShuffleNetV2
 
 
 class ShuffleVertex(nn.Module):
