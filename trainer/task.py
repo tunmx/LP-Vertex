@@ -10,6 +10,7 @@ import datetime
 from torch.utils.data import DataLoader
 from loguru import logger
 
+
 class TrainTask(object):
     def __init__(self, model, save_dir, loss_func, optimizer_option, lr_schedule_option, weight_path=None):
         self.save_dir = save_dir
@@ -85,7 +86,6 @@ class TrainTask(object):
             loss = self.loss_func(outputs, labels.to(self.task_device))
             loss.backward()
 
-
             self.optimizer.step()
             self.scheduler.step()
 
@@ -106,7 +106,8 @@ class TrainTask(object):
                 loss = self.loss_func(outputs, val_labels.to(self.task_device))
                 val_loss += loss.item()
 
-
+                val_bar.set_description(
+                    'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
 
         return val_loss / len(val_bar)
 
