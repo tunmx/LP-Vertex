@@ -1,9 +1,8 @@
 import cv2
 import numpy as np
-from imgaug import augmenters as iaa
 import imgaug as ia
 import imageio
-from imgaug import augmenters as iaa  # 引入数据增强的包
+from imgaug import augmenters as iaa
 
 
 class Pipeline(object):

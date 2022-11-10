@@ -6,11 +6,11 @@ import cv2
 import numpy as np
 import tqdm
 
-from data import VertexDataset
+from data import LabelMeDataset
 
 
 if __name__ == '__main__':
-    dataset = VertexDataset("/Users/tunm/datasets/oinbagCrawler_vertex/data", mode='test', is_show=True)
+    dataset = LabelMeDataset("/Users/tunm/datasets/oinbagCrawler_vertex/data", mode='test', is_show=True)
     save_path = "/Users/tunm/datasets/oinbagCrawler_vertex_train"
     train_dir = os.path.join(save_path, "train")
     val_dir = os.path.join(save_path, "val")

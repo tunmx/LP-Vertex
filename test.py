@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-from data import VertexDataset
+from data import LabelMeDataset
 from model.shuffle_vertex import ShuffleVertex
 from torch.utils.data import DataLoader
 import torch
@@ -13,7 +13,7 @@ net.to(device)
 
 batch_size = 128
 val_dir = "oinbagCrawler_vertex_train/val"
-val_dataset = VertexDataset(val_dir, mode='val', is_show=False)
+val_dataset = LabelMeDataset(val_dir, mode='val', is_show=False)
 val_dataloader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=True)
 
 img_tensor, label_tensor = next(iter(val_dataloader))

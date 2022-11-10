@@ -1,12 +1,12 @@
 import cv2
 import numpy as np
-from data import VertexDataset
+from data import LabelMeDataset
 from torch.utils.data import DataLoader
 
 
 if __name__ == '__main__':
     batch_size = 32
-    train_dataset = VertexDataset("oinbagCrawler_vertex_train/train", mode='train', is_show=False)
+    train_dataset = LabelMeDataset("oinbagCrawler_vertex_train/train", mode='train', is_show=False)
     train_dataloader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
     img_tensor, label_tensor = next(iter(train_dataloader))
     print(img_tensor.shape)

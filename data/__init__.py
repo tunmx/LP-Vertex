@@ -1,2 +1,2 @@
-from .dataset import VertexDataset
+from .dataset import LabelMeDataset
 
