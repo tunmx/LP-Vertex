@@ -9,7 +9,6 @@ import tqdm
 from data import LabelMeDataset
 
 
-
 if __name__ == '__main__':
     dataset = LabelMeDataset("/Users/tunm/datasets/oinbagCrawler_vertex/data", mode='test', is_show=True)
     save_path = "/Users/tunm/datasets/oinbagCrawler_vertex_train"
