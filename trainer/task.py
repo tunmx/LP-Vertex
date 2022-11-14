@@ -17,7 +17,7 @@ class TrainTask(object):
         self.model = model
         self.task_device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001, )
-        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=10, gamma=0.1)  # 设施学习率下降策略
+        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=3, gamma=0.5)  # 设施学习率下降策略
         self.loss_func = loss_function(loss_func)
         self.optimizer_option = optimizer_option
         self.lr_schedule_option = lr_schedule_option
