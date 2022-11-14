@@ -1,6 +1,6 @@
 import torch
 from data import LabelMeDataset
-from model.mobile_vertex import MobileNetV2
+from model.mobile_vertex import MobileVertex
 from torch.utils.data import DataLoader
 from trainer.task import TrainTask
 from loguru import logger
@@ -18,7 +18,7 @@ val_dataloader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=
 logger.info(f"Training Dataset Total: {len(train_dataset)}")
 logger.info(f"Verification Dataset Total: {len(val_dataset)}")
 
-net = MobileNetV2()
+net = MobileVertex()
 
 lr_schedule_option = dict(name='ExponentialLR', gamma=0.1)
 optimizer_option = dict(name='SGD', lr=0.001, momentum=0.9, weight_decay=0.0005)
