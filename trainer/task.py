@@ -67,7 +67,7 @@ class TrainTask(object):
 
             self.writer.add_scalar('loss/train', train_loss, epoch)
             self.writer.add_scalar('loss/val', val_loss, epoch)
-            self.writer.add_scalar('lr/epoch', self.lr_scheduler.get_last_lr()[0], epoch)
+            # self.writer.add_scalar('lr/epoch', self.lr_scheduler.get_last_lr()[0], epoch)
 
         logger.info("This training is completed, a total of {} rounds of training, training time: {} minutes" \
                     .format(epoch_num, (datetime.datetime.now() - self.time_tag).seconds // 60))
