@@ -87,7 +87,6 @@ class TrainTask(object):
             # print("outputs: labels", labels.shape)
             loss = self.loss_func(outputs, labels.to(self.task_device))
             loss.backward()
-            print(self.optimizer.state_dict()['param_groups'][0]['lr'])
             self.optimizer.step()
             self.scheduler.step()
 
@@ -101,6 +100,7 @@ class TrainTask(object):
         # val_acc = 0.0
         with torch.no_grad():
             val_bar = tqdm(val_data)
+            logger.info(f"Learning Rate: {self.optimizer.state_dict()['param_groups'][0]['lr']}")
             for step, data in enumerate(val_bar):
                 val_images, val_labels = data
                 # val_images[0] = np.
