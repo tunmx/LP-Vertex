@@ -87,7 +87,7 @@ class TrainTask(object):
             # print("outputs: labels", labels.shape)
             loss = self.loss_func(outputs, labels.to(self.task_device))
             loss.backward()
-
+            print(self.model.optimizer.state_dict()['param_groups'][0]['lr'])
             self.optimizer.step()
             self.scheduler.step()
 
