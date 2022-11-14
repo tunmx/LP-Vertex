@@ -83,6 +83,8 @@ class TrainTask(object):
             labels = labels.to(self.task_device)
             self.optimizer.zero_grad()
             outputs = self.model(samples.to(self.task_device))
+            print("debug: outputs", outputs.shape)
+            print("outputs: labels", labels.shape)
             loss = self.loss_func(outputs, labels.to(self.task_device))
             loss.backward()
 
