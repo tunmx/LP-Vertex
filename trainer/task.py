@@ -17,7 +17,8 @@ class TrainTask(object):
         self.model = model
         self.task_device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001, )
-        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=8, gamma=0.5)  # 设施学习率下降策略
+        self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, mode='min', factor=0.5, patience=5,
+                                                                    verbose=True, )  # 设施学习率下降策略
         self.loss_func = loss_function(loss_func)
         self.optimizer_option = optimizer_option
         self.lr_schedule_option = lr_schedule_option
@@ -87,10 +88,9 @@ class TrainTask(object):
             loss.backward()
             self.optimizer.step()
 
-
             train_bar.set_description('Epoch: [{}/{}] loss: {:.3f}'.format(epoch + 1, epochs_total, loss))
 
-        self.scheduler.step()
+        self.scheduler.step(loss)
 
         return loss.item()
 

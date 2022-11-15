@@ -24,7 +24,7 @@ net = MobileVertex(width_mult=0.5)
 lr_schedule_option = dict(name='StepLR', step_size=3, gamma=0.5, )
 optimizer_option = dict(name='SGD', lr=0.001, momentum=0.9, weight_decay=0.0005)
 
-task_option = dict(model=net, save_dir='save_dir_t2_05', loss_func='mse_loss', lr_schedule_option=lr_schedule_option,
+task_option = dict(model=net, save_dir='save_dir_mnetv2_half', loss_func='mse_loss', lr_schedule_option=lr_schedule_option,
                    optimizer_option=optimizer_option, weight_path=None)
 
 task = TrainTask(**task_option)
