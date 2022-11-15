@@ -18,7 +18,7 @@ val_dataloader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=
 logger.info(f"Training Dataset Total: {len(train_dataset)}")
 logger.info(f"Verification Dataset Total: {len(val_dataset)}")
 
-net = MobileVertex()
+net = MobileVertex(width_mult=0.5)
 
 # 暂时无用
 lr_schedule_option = dict(name='StepLR', step_size=3, gamma=0.5, )

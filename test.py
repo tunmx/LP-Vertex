@@ -2,13 +2,13 @@ import cv2
 import numpy as np
 
 from data import LabelMeDataset
-from model.shuffle_vertex import ShuffleVertex
+from model.mobile_vertex import MobileVertex
 from torch.utils.data import DataLoader
 import torch
 
 device = torch.device("cpu")
-net = ShuffleVertex()
-net.load_state_dict(torch.load("save_dir_t1/model_91_loss0.001.pth", map_location="cpu"))
+net = MobileVertex()
+net.load_state_dict(torch.load("save_dir_t2/last_t0.pth", map_location="cpu"))
 net.to(device)
 
 batch_size = 128
