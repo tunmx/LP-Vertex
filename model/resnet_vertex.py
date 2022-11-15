@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as f
-from backbone import ResNet
+from .backbone import ResNet
 
 
 class ResNetVertex(nn.Module):
