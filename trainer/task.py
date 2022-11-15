@@ -21,8 +21,6 @@ class TrainTask(object):
         self.loss_func = loss_function(loss_func)
         self.optimizer_option = optimizer_option
         self.lr_schedule_option = lr_schedule_option
-        self.optimizer, self.lr_scheduler = None, None
-        self._configure_optimizers()
         self.best_accuracy = 0.0
         self.best_loss = 1000.0
         self.time_tag = datetime.datetime.now()
@@ -86,8 +84,8 @@ class TrainTask(object):
             loss = self.loss_func(outputs, labels.to(self.task_device))
             loss.backward()
 
-            self.optimizer.step()
             self.scheduler.step()
+            self.optimizer.step()
 
             train_bar.set_description('Epoch: [{}/{}] loss: {:.3f}'.format(epoch + 1, epochs_total, loss))
 
@@ -111,18 +109,18 @@ class TrainTask(object):
 
         return val_loss / len(val_bar)
 
-    def _configure_optimizers(self):
-        optimizer_cfg = copy.deepcopy(self.optimizer_option)
-        logger.info("loading optimizer {}".format(optimizer_cfg.get('name')))
-        name = optimizer_cfg.pop('name')
-        build_optimizer = getattr(torch.optim, name)
-        self.optimizer = build_optimizer(params=self.model.parameters(), **optimizer_cfg)
-
-        schedule_cfg = copy.deepcopy(self.lr_schedule_option)
-        name = schedule_cfg.pop('name')
-        build_scheduler = getattr(torch.optim.lr_scheduler, name)
-        self.lr_scheduler = build_scheduler(
-            optimizer=self.optimizer, **schedule_cfg)
+    # def _configure_optimizers(self):
+    #     optimizer_cfg = copy.deepcopy(self.optimizer_option)
+    #     logger.info("loading optimizer {}".format(optimizer_cfg.get('name')))
+    #     name = optimizer_cfg.pop('name')
+    #     build_optimizer = getattr(torch.optim, name)
+    #     self.optimizer = build_optimizer(params=self.model.parameters(), **optimizer_cfg)
+    #
+    #     schedule_cfg = copy.deepcopy(self.lr_schedule_option)
+    #     name = schedule_cfg.pop('name')
+    #     build_scheduler = getattr(torch.optim.lr_scheduler, name)
+    #     self.lr_scheduler = build_scheduler(
+    #         optimizer=self.optimizer, **schedule_cfg)
 
     def save_model(self, loss, epoch, mode='min'):
         torch.save(self.model.state_dict(), os.path.join(
