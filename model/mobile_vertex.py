@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as f
-from .backbone import MobileNetV2
+from backbone import MobileNetV2
 
 def conv_1x1_bn(inp, oup):
     return nn.Sequential(
@@ -15,16 +15,16 @@ class MobileVertex(nn.Module):
     def __init__(self, width_mult=1., last_channel=1280):
         super().__init__()
         self.backbone = MobileNetV2(width_mult=width_mult, last_channel=last_channel)
-        self.conv_1x1 = conv_1x1_bn(1280, 512)
+        # self.conv_1x1 = conv_1x1_bn(1280, 512)
         self.pool1 = nn.AvgPool2d(4, stride=1)
-        self.fc = nn.Linear(512, 128)
+        self.fc = nn.Linear(1280, 128)
         # self.relu6 = nn.ReLU6()
         self.prelu1 = nn.PReLU()
         self.kps = nn.Linear(128, 8)
 
     def forward(self, x):
         x = self.backbone(x)
-        x = self.conv_1x1(x)
+        # x = self.conv_1x1(x)
         # print(x.shape)
         x = self.pool1(x)
         x = x.view(x.size(0), -1)
