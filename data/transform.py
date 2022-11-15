@@ -54,7 +54,7 @@ class Pipeline(object):
         aug_det = self.seq_map[mode].to_deterministic()
         img_aug = aug_det.augment_image(image)
         kps_aug = aug_det.augment_keypoints(kpsoi)
-        kps_out = kps_aug.get_coords_array()
+        kps_out = kps_aug.to_xy_array()
 
         return img_aug, kps_out
 
