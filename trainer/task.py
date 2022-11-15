@@ -17,7 +17,7 @@ class TrainTask(object):
         self.model = model
         self.task_device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001, )
-        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=10, gamma=0.1)  # 设施学习率下降策略
+        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=3, gamma=0.5)  # 设施学习率下降策略
         self.loss_func = loss_function(loss_func)
         self.optimizer_option = optimizer_option
         self.lr_schedule_option = lr_schedule_option
@@ -65,7 +65,7 @@ class TrainTask(object):
 
             self.writer.add_scalar('loss/train', train_loss, epoch)
             self.writer.add_scalar('loss/val', val_loss, epoch)
-            self.writer.add_scalar('lr/epoch', self.lr_scheduler.get_last_lr()[0], epoch)
+            # self.writer.add_scalar('lr/epoch', self.lr_scheduler.get_last_lr()[0], epoch)
 
         logger.info("This training is completed, a total of {} rounds of training, training time: {} minutes" \
                     .format(epoch_num, (datetime.datetime.now() - self.time_tag).seconds // 60))
@@ -81,9 +81,10 @@ class TrainTask(object):
             labels = labels.to(self.task_device)
             self.optimizer.zero_grad()
             outputs = self.model(samples.to(self.task_device))
+            # print("debug: outputs", outputs.shape)
+            # print("outputs: labels", labels.shape)
             loss = self.loss_func(outputs, labels.to(self.task_device))
             loss.backward()
-
             self.scheduler.step()
             self.optimizer.step()
 
@@ -97,6 +98,7 @@ class TrainTask(object):
         # val_acc = 0.0
         with torch.no_grad():
             val_bar = tqdm(val_data)
+            logger.info(f"Learning Rate: {self.optimizer.state_dict()['param_groups'][0]['lr']}")
             for step, data in enumerate(val_bar):
                 val_images, val_labels = data
                 # val_images[0] = np.
