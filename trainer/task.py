@@ -85,10 +85,12 @@ class TrainTask(object):
             # print("outputs: labels", labels.shape)
             loss = self.loss_func(outputs, labels.to(self.task_device))
             loss.backward()
-            self.scheduler.step()
             self.optimizer.step()
 
+
             train_bar.set_description('Epoch: [{}/{}] loss: {:.3f}'.format(epoch + 1, epochs_total, loss))
+
+        self.scheduler.step()
 
         return loss.item()
 
