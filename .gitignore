@@ -2,3 +2,7 @@
 oinbagCrawler_vertex_train
 save_dir*/
 __pycache__
+build
+dist
+MANIFEST
+
