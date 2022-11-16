@@ -1,10 +1,8 @@
 import copy
 import os
-from loguru import logger
 import torch
-from torchmetrics import Accuracy
 from tqdm import tqdm
-from model.loss import loss_function
+from model.loss import get_loss_function
 from torch.utils.tensorboard import SummaryWriter
 import datetime
 from torch.utils.data import DataLoader
@@ -16,12 +14,11 @@ class TrainTask(object):
         self.save_dir = save_dir
         self.model = model
         self.task_device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001, )
-        self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, mode='min', factor=0.5, patience=5,
-                                                                    verbose=True, )  # 设施学习率下降策略
-        self.loss_func = loss_function(loss_func)
         self.optimizer_option = optimizer_option
         self.lr_schedule_option = lr_schedule_option
+        self.optimizer, self.scheduler = self._configure_optimizers(model, optimizer_option=optimizer_option,
+                                                                    lr_schedule_option=lr_schedule_option)
+        self.loss_func = get_loss_function(loss_func)
         self.best_accuracy = 0.0
         self.best_loss = 1000.0
         self.time_tag = datetime.datetime.now()
@@ -34,7 +31,7 @@ class TrainTask(object):
         self.writer = SummaryWriter(self.save_dir)
 
     def _load_pretraining_model(self, weight_path=None):
-        # 加载预训练模型
+        # Load the pre-training model
         logger.info('loading pretraining model {}'.format(weight_path))
         pretrained_dict = torch.load(weight_path)
         model_dict = self.model.state_dict()
@@ -42,8 +39,8 @@ class TrainTask(object):
         model_dict.update(pretrained_dict)
         self.model.load_state_dict(model_dict)
 
-        # TODO 加载预训练权重，冻结所有层，只训练最后的分类头，如果新增此方式，
-        # #冻结最后一层
+        # TODO Load the pre-training weight, freeze all layers, and only train the last classification header. If this method is added,
+        # Freeze the last layer
         # pretrained_dict = {k: v for k, v in pretrained_dict.items() if "classifier" not in k}
         # missing_keys, unexpected_keys = self.model.load_state_dict(
         #     pretrained_dict, strict=False)
@@ -55,10 +52,9 @@ class TrainTask(object):
         logger.info(f"Training Epochs Total: {epoch_num}")
         logger.info(f"Training Result Save to {self.save_dir}")
         for epoch in range(epoch_num):
-            # 训练集
+            # train set
             train_loss = self.train_one_epoch(train_data, epoch, epoch_num)
-            # logger.info(f"Train Epoch[{epoch + 1}/{epoch_num}] train_loss: {train_loss}")
-            # 验证集
+            # val set
             val_loss = self.validation_one_epoch(val_data)
             logger.info(f"Train Epoch[{epoch + 1}/{epoch_num}] val_loss: {val_loss}")
             if is_save:
@@ -90,7 +86,11 @@ class TrainTask(object):
 
             train_bar.set_description('Epoch: [{}/{}] loss: {:.3f}'.format(epoch + 1, epochs_total, loss))
 
-        self.scheduler.step(loss)
+        if self.lr_schedule_option in ["ReduceLROnPlateau", ]:
+            # callable
+            self.scheduler.step(loss)
+        else:
+            self.scheduler.step()
 
         return loss.item()
 
@@ -113,27 +113,32 @@ class TrainTask(object):
 
         return val_loss / len(val_bar)
 
-    # def _configure_optimizers(self):
-    #     optimizer_cfg = copy.deepcopy(self.optimizer_option)
-    #     logger.info("loading optimizer {}".format(optimizer_cfg.get('name')))
-    #     name = optimizer_cfg.pop('name')
-    #     build_optimizer = getattr(torch.optim, name)
-    #     self.optimizer = build_optimizer(params=self.model.parameters(), **optimizer_cfg)
-    #
-    #     schedule_cfg = copy.deepcopy(self.lr_schedule_option)
-    #     name = schedule_cfg.pop('name')
-    #     build_scheduler = getattr(torch.optim.lr_scheduler, name)
-    #     self.lr_scheduler = build_scheduler(
-    #         optimizer=self.optimizer, **schedule_cfg)
+    @staticmethod
+    def _configure_optimizers(model, optimizer_option, lr_schedule_option):
+        optimizer_cfg = copy.deepcopy(optimizer_option)
+        logger.info("loading optimizer {}".format(optimizer_cfg.get('name')))
+        name = optimizer_cfg.pop('name')
+        build_optimizer = getattr(torch.optim, name)
+        optimizer = build_optimizer(params=model.parameters(), **optimizer_cfg)
+
+        schedule_cfg = copy.deepcopy(lr_schedule_option)
+        name = schedule_cfg.pop('name')
+        build_scheduler = getattr(torch.optim.lr_scheduler, name)
+        scheduler = build_scheduler(
+            optimizer=optimizer, **schedule_cfg)
+
+        return optimizer, scheduler
 
     def save_model(self, loss, epoch, mode='min'):
         torch.save(self.model.state_dict(), os.path.join(
-            self.save_dir, 'last_t0.pth'))
+            self.save_dir, 'last.pth'))
         if mode == 'min':
-            # 根据损失率最小保存
+            # Minimum save according to loss rate
             if loss < self.best_loss:
-                torch.save(self.model.state_dict(), os.path.join(
-                    self.save_dir, 'model_%d_loss%0.3f.pth' % (epoch + 1, loss)))
+                # torch.save(self.model.state_dict(), os.path.join(
+                #     self.save_dir, 'model_%d_loss%0.3f.pth' % (epoch + 1, loss)))
+                with open("best_epoch.txt", 'w') as f:
+                    f.write(f"{epoch}: {loss}\n")
                 torch.save(self.model.state_dict(), os.path.join(
                     self.save_dir, 'best_model.pth'))
                 self.best_loss = loss

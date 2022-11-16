@@ -6,6 +6,6 @@ loss_ = {
 }
 
 
-def loss_function(name):
+def get_loss_function(name):
     assert name in loss_.keys()
     return loss_[name]

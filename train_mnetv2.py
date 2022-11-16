@@ -21,8 +21,8 @@ logger.info(f"Verification Dataset Total: {len(val_dataset)}")
 net = MobileVertex(width_mult=0.5)
 
 # 暂时无用
-lr_schedule_option = dict(name='StepLR', step_size=3, gamma=0.5, )
-optimizer_option = dict(name='SGD', lr=0.001, momentum=0.9, weight_decay=0.0005)
+lr_schedule_option = dict(name='ReduceLROnPlateau', mode='min', factor=0.5, patience=5, verbose=True, )
+optimizer_option = dict(name='Adam', lr=0.001, )
 
 task_option = dict(model=net, save_dir='save_dir_mnetv2_half', loss_func='mse_loss', lr_schedule_option=lr_schedule_option,
                    optimizer_option=optimizer_option, weight_path=None)
