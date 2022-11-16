@@ -1,5 +1,6 @@
 from .dataset import LabelMeDataset
 from .dataset.base import VertexDatasetBase
+from .transform import Pipeline
 
 _dataset_map_ = dict(LabelMeDataset=LabelMeDataset, )
 
