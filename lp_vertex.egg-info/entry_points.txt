@@ -1,3 +1,0 @@
-[console_scripts]
-lpv = command:cli
-
