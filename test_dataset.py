@@ -4,7 +4,8 @@ from torch.utils.data import DataLoader
 
 if __name__ == '__main__':
     batch_size = 32
-    train_dataset = LabelMeDataset("oinbagCrawler_vertex_train/train", mode='train', is_show=False)
+    path_list = ['oinbagCrawler_vertex_train/train', '/Users/tunm/Downloads/ccpd_all_vertex/data']
+    train_dataset = LabelMeDataset(path_list, mode='train', is_show=False)
     train_dataloader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
     img_tensor, label_tensor = next(iter(train_dataloader))
     print(img_tensor.shape)
