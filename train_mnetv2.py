@@ -1,8 +1,7 @@
-import torch
-from data import LabelMeDataset
-from model.mobile_vertex import MobileVertex
+from breezevertex.data import LabelMeDataset
+from breezevertex.model.mobile_vertex import MobileVertex
 from torch.utils.data import DataLoader
-from trainer.task import TrainTask
+from breezevertex.trainer.task import TrainTask
 from loguru import logger
 
 train_dir = "oinbagCrawler_vertex_train/train"

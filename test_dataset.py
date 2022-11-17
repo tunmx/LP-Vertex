@@ -1,6 +1,4 @@
-import cv2
-import numpy as np
-from data import LabelMeDataset
+from breezevertex.data import LabelMeDataset
 from torch.utils.data import DataLoader
 
 

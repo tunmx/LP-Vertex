@@ -2,7 +2,6 @@ from loguru import logger
 from command.aliased_group import AliasedGroup
 from command.evaluate import evaluate
 from command.train import train
-
 import click
 
 __all__ = ['cli']

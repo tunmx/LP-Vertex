@@ -1,8 +1,8 @@
-from abc import ABCMeta, abstractmethod, ABC
+from abc import ABCMeta
 import cv2
 import numpy as np
 from torch.utils.data import Dataset
-from data.transform import Pipeline
+from breezevertex.data.transform import Pipeline
 
 
 class VertexDatasetBase(Dataset, metaclass=ABCMeta):

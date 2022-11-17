@@ -2,7 +2,7 @@ import copy
 import os
 import torch
 from tqdm import tqdm
-from model.loss import get_loss_function
+from breezevertex.model.loss import get_loss_function
 from torch.utils.tensorboard import SummaryWriter
 import datetime
 from torch.utils.data import DataLoader

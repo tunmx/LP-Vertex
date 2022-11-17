@@ -1,9 +1,8 @@
 import cv2
 import numpy as np
 
-from data import LabelMeDataset
-from model.mobile_vertex import MobileVertex
-from model.resnet_vertex import ResNetVertex
+from breezevertex.data import LabelMeDataset
+from breezevertex.model.resnet_vertex import ResNetVertex
 from torch.utils.data import DataLoader
 import torch
 

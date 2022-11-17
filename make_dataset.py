@@ -2,11 +2,9 @@ import os
 import random
 import shutil
 
-import cv2
-import numpy as np
 import tqdm
 
-from data import LabelMeDataset
+from breezevertex.data import LabelMeDataset
 
 
 if __name__ == '__main__':
