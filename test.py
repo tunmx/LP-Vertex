@@ -3,12 +3,13 @@ import numpy as np
 
 from data import LabelMeDataset
 from model.mobile_vertex import MobileVertex
+from model.resnet_vertex import ResNetVertex
 from torch.utils.data import DataLoader
 import torch
 
 device = torch.device("cpu")
-net = MobileVertex(0.5)
-net.load_state_dict(torch.load("save_dir_mnetv2_half/best_model.pth", map_location="cpu"))
+net = ResNetVertex(50)
+net.load_state_dict(torch.load("save_dir_r50/best_model.pth", map_location="cpu"))
 net.to(device)
 
 batch_size = 128
