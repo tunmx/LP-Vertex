@@ -135,7 +135,7 @@ class TrainTask(object):
 
                 val_bar.set_description(
                     'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
-                show_images = visual_images(val_images, outputs, 112, 112)
+                show_images = visual_images(val_images.cpu(), outputs, 112, 112)
                 show_images_list += show_images
             random.shuffle(show_images_list)
             for idx in range(16):
