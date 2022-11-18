@@ -86,7 +86,7 @@ class TrainTask(object):
 
             train_bar.set_description('Epoch: [{}/{}] loss: {:.6f}'.format(epoch + 1, epochs_total, loss))
 
-        if self.lr_schedule_option in ["ReduceLROnPlateau", ]:
+        if self.lr_schedule_option['name'] in ["ReduceLROnPlateau", ]:
             # callable
             self.scheduler.step(loss)
         else:
