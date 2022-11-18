@@ -2,6 +2,7 @@ import copy
 import os
 import random
 
+import numpy as np
 import torch
 from tqdm import tqdm
 from breezevertex.model.loss import get_loss_function
@@ -55,9 +56,7 @@ class TrainTask(object):
 
     def _upload_images_(self, show_images, step):
         if self.upload:
-            list_ = list()
-            for img in show_images:
-                list_.append(img)
+            list_ = np.concatenate(show_images, axis=0)
             wandb.log({
                 "results": list_
             }, step=step)
