@@ -53,6 +53,14 @@ class TrainTask(object):
                    job_type="training",
                    reinit=True)
 
+    def _upload_images_(self, show_images):
+        if self.upload:
+            for img in show_images:
+                wandb.log({
+                    "results": wandb.Image(img)
+                })
+
+
     def _load_pretraining_model(self, weight_path=None):
         # Load the pre-training model
         logger.info('loading pretraining model {}'.format(weight_path))
@@ -136,15 +144,9 @@ class TrainTask(object):
 
                 val_bar.set_description(
                     'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
-                show_images = visual_images(val_images.cpu(), outputs.cpu(), 112, 112)
-                if self.upload:
-                    for idx in range(16):
-                        img = show_images[idx]
-                        wandb.log({
-                            "results": wandb.Image(img)
-                        })
-                else:
-                    self.upload = False
+                show_images = visual_images(val_images.cpu()[:4], outputs.cpu()[:4], 112, 112)
+                self.upload = False
+                self._upload_images_(show_images)
 
 
         return val_loss / len(val_bar)
