@@ -33,10 +33,10 @@ def train(config_path, ):
     logger.info(f"Training Dataset Total: {len(train_dataset)}")
     logger.info(f"Verification Dataset Total: {len(val_dataset)}")
     # create dataloader
-    train_dataloader = DataLoader(dataset=train_dataset, batch_size=train_batch_size, shuffle=True)
-    val_dataloader = DataLoader(dataset=val_dataset, batch_size=val_batch_size, shuffle=True)
-    # build trainer
     trainer_cfg = cfg.trainer
+    train_dataloader = DataLoader(dataset=train_dataset, batch_size=train_batch_size, shuffle=True, num_workers=trainer_cfg.worker_num)
+    val_dataloader = DataLoader(dataset=val_dataset, batch_size=val_batch_size, shuffle=True, num_workers=trainer_cfg.worker_num)
+    # build trainer
     task_option = dict(model=net, save_dir=cfg.save_dir, loss_func=model_cfg.loss.name,
                        lr_schedule_option=trainer_cfg.schedule, optimizer_option=trainer_cfg.optimizer,
                        weight_path=model_cfg.weight)

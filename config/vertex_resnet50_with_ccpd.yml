@@ -38,6 +38,7 @@ data:
     cval: 0
     mode: constant
 trainer:
+  worker_num: 8
   epoch_num: 2000
   optimizer:
     name: Adam
