@@ -38,7 +38,7 @@ class TrainTask(object):
         wandb_init_config = dict(team_name=wandb_cfg['team_name'], project_name=wandb_cfg['project_name'],
                                  experiment_name=wandb_cfg['experiment_name'], scenario_name=wandb_cfg['scenario_name'])
         if wandb_cfg:
-            wandb.login(key=wandb_cfg.wandb_cfg)
+            wandb.login(key=wandb_cfg.key)
         wandb.init(config=wandb_init_config,
                    project=wandb_cfg['project_name'],
                    entity=wandb_cfg['team_name'],
