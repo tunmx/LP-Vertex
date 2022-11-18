@@ -58,7 +58,7 @@ class TrainTask(object):
         if self.upload:
             list_ = np.concatenate(show_images, axis=0)
             wandb.log({
-                "results": list_
+                "results": wandb.Image(list_)
             }, step=step)
 
 
