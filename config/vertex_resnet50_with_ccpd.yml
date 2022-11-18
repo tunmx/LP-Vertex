@@ -12,7 +12,7 @@ data:
     option:
       img_path: [oinbagCrawler_vertex_train/train, ccpd_vertex_data_train/train]
       labels_path: null
-    batch_size: 256
+    batch_size: 128
   val:
     name: LabelMeDataset
     option:
