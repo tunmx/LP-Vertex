@@ -125,7 +125,7 @@ class TrainTask(object):
         with torch.no_grad():
             val_bar = tqdm(val_data)
             logger.info(f"Learning Rate: {self.optimizer.state_dict()['param_groups'][0]['lr']}")
-            show_images_list = list()
+            upload = True
             for step, data in enumerate(val_bar):
                 val_images, val_labels = data
                 # val_images[0] = np.
@@ -136,13 +136,14 @@ class TrainTask(object):
                 val_bar.set_description(
                     'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
                 show_images = visual_images(val_images.cpu(), outputs.cpu(), 112, 112)
-                show_images_list += show_images.tolist()
-            random.shuffle(show_images_list)
-            for idx in range(16):
-                img = show_images_list[idx]
-                wandb.log({
-                    "results": wandb.Image(img)
-                })
+                if upload:
+                    for idx in range(16):
+                        img = show_images[idx]
+                        wandb.log({
+                            "results": wandb.Image(img)
+                        })
+                else:
+                    upload = False
 
 
         return val_loss / len(val_bar)
