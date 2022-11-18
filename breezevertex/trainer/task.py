@@ -7,10 +7,12 @@ from torch.utils.tensorboard import SummaryWriter
 import datetime
 from torch.utils.data import DataLoader
 from loguru import logger
+import wandb
+import socket
 
 
 class TrainTask(object):
-    def __init__(self, model, save_dir, loss_func, optimizer_option, lr_schedule_option, weight_path=None):
+    def __init__(self, model, save_dir, loss_func, optimizer_option, lr_schedule_option, wandb_cfg, weight_path=None):
         self.save_dir = save_dir
         self.model = model
         self.task_device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -29,6 +31,22 @@ class TrainTask(object):
 
         os.makedirs(self.save_dir, exist_ok=True)
         self.writer = SummaryWriter(self.save_dir)
+        self._wandb_log_init_(wandb_cfg)
+
+    def _wandb_log_init_(self, wandb_cfg):
+        dir_path = os.path.join(self.save_dir, wandb_cfg['folder'])
+        wandb_init_config = dict(team_name=wandb_cfg['team_name'], project_name=wandb_cfg['project_name'],
+                                 experiment_name=wandb_cfg['experiment_name'], scenario_name=wandb_cfg['scenario_name'])
+        if wandb_cfg:
+            wandb.login(key=wandb_cfg.wandb_cfg)
+        wandb.init(config=wandb_init_config,
+                   project=wandb_cfg['project_name'],
+                   entity=wandb_cfg['team_name'],
+                   notes=socket.gethostname(),
+                   group="training",
+                   dir=dir_path,
+                   job_type="training",
+                   reinit=True)
 
     def _load_pretraining_model(self, weight_path=None):
         # Load the pre-training model
@@ -54,8 +72,10 @@ class TrainTask(object):
         for epoch in range(epoch_num):
             # train set
             train_loss = self.train_one_epoch(train_data, epoch, epoch_num)
+            wandb.log({'train_loss': train_loss}, step=epoch)
             # val set
             val_loss = self.validation_one_epoch(val_data)
+            wandb.log({'val_loss': val_loss}, step=epoch)
             logger.info(f"Train Epoch[{epoch + 1}/{epoch_num}] val_loss: {val_loss}")
             if is_save:
                 self.save_model(val_loss, epoch, mode='min')
