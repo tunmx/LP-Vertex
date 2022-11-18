@@ -84,7 +84,7 @@ class TrainTask(object):
             loss.backward()
             self.optimizer.step()
 
-            train_bar.set_description('Epoch: [{}/{}] loss: {:.3f}'.format(epoch + 1, epochs_total, loss))
+            train_bar.set_description('Epoch: [{}/{}] loss: {:.6f}'.format(epoch + 1, epochs_total, loss))
 
         if self.lr_schedule_option in ["ReduceLROnPlateau", ]:
             # callable
