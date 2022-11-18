@@ -72,10 +72,10 @@ class TrainTask(object):
         for epoch in range(epoch_num):
             # train set
             train_loss = self.train_one_epoch(train_data, epoch, epoch_num)
-            wandb.log({'train_loss': train_loss}, step=epoch)
+            wandb.log({'train_loss': train_loss}, epoch=epoch + 1)
             # val set
             val_loss = self.validation_one_epoch(val_data)
-            wandb.log({'val_loss': val_loss}, step=epoch)
+            wandb.log({'val_loss': val_loss}, epoch=epoch + 1)
             logger.info(f"Train Epoch[{epoch + 1}/{epoch_num}] val_loss: {val_loss}")
             if is_save:
                 self.save_model(val_loss, epoch, mode='min')
