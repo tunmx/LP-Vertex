@@ -49,3 +49,10 @@ trainer:
     factor: 0.5
     patience: 5
     verbose: True
+wandb:
+  team_name: tunm
+  project_name: LP-Vertex
+  experiment_name: exp
+  scenario_name: training
+  folder: log
+  key: 4b49a6b0286dcfb718a12360108a7a8578c3582c
