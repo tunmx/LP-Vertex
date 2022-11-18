@@ -1,7 +1,7 @@
 import os
 import random
 import shutil
-
+from loguru import logger
 import tqdm
 
 from breezevertex.data import LabelMeDataset
@@ -22,6 +22,9 @@ if __name__ == '__main__':
     train_num = int(len(dataset) * split_rate)
     train_set = list_[:train_num]
     val_set = list_[train_num:]
+    logger.info(f"train: {train_set}/{train_num}")
+    logger.info(f"val: {val_set}/{train_num}")
+
 
     for item in tqdm.tqdm(train_set):
         img_path = item['image']
