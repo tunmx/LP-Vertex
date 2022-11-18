@@ -1,4 +1,4 @@
-save_dir: workspace/resnet50
+save_dir: workspace/resnet50_with_ccpd
 model:
   name: ResNetVertex
   option:
