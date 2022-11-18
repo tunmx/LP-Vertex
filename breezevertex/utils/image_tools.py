@@ -19,11 +19,16 @@ def decode_points(label_tensor, w, h):
     return kps
 
 
+colors = [(100, 100, 255), (10, 255, 100), (255, 100, 20), (100, 255, 255)]
 def visual_images(images_tensor, label_tensor, w, h):
     images = decode_images(images_tensor)
     kps = decode_points(label_tensor, w, h)
+    list_ = list()
     for idx, img in enumerate(images):
-        for x, y in kps[idx].astype(np.int32):
-            cv2.line(img, (x, y), (x, y), (100, 100, 255), 3)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        for i, p in enumerate(kps[idx].astype(np.int32)):
+            x, y = p
+            cv2.line(img, (x, y), (x, y), colors[i], 3)
+        list_.append(img)
 
-    return images
+    return list_

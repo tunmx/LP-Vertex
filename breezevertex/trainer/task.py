@@ -27,6 +27,7 @@ class TrainTask(object):
         self.best_accuracy = 0.0
         self.best_loss = 1000.0
         self.time_tag = datetime.datetime.now()
+        self.upload = True
 
         if weight_path:
             self._load_pretraining_model(weight_path)
@@ -78,6 +79,7 @@ class TrainTask(object):
             train_loss = self.train_one_epoch(train_data, epoch, epoch_num)
             wandb.log({'train_loss': train_loss}, step=epoch)
             # val set
+            self.upload = True
             val_loss = self.validation_one_epoch(val_data)
             wandb.log({'val_loss': val_loss}, step=epoch)
             logger.info(f"Train Epoch[{epoch + 1}/{epoch_num}] val_loss: {val_loss}")
@@ -125,7 +127,6 @@ class TrainTask(object):
         with torch.no_grad():
             val_bar = tqdm(val_data)
             logger.info(f"Learning Rate: {self.optimizer.state_dict()['param_groups'][0]['lr']}")
-            upload = True
             for step, data in enumerate(val_bar):
                 val_images, val_labels = data
                 # val_images[0] = np.
@@ -136,14 +137,14 @@ class TrainTask(object):
                 val_bar.set_description(
                     'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
                 show_images = visual_images(val_images.cpu(), outputs.cpu(), 112, 112)
-                if upload:
+                if self.upload:
                     for idx in range(16):
                         img = show_images[idx]
                         wandb.log({
                             "results": wandb.Image(img)
                         })
                 else:
-                    upload = False
+                    self.upload = False
 
 
         return val_loss / len(val_bar)
