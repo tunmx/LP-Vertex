@@ -145,8 +145,8 @@ class TrainTask(object):
                 val_bar.set_description(
                     'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
                 show_images = visual_images(val_images.cpu()[:4], outputs.cpu()[:4], 112, 112)
-                self.upload = False
                 self._upload_images_(show_images)
+                self.upload = False
 
 
         return val_loss / len(val_bar)
