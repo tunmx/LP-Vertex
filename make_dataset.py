@@ -18,7 +18,7 @@ if __name__ == '__main__':
     list_ = dataset.data_list
     random.shuffle(list_)
 
-    split_rate = 0.92
+    split_rate = 0.95
     train_num = int(len(dataset) * split_rate)
     train_set = list_[:train_num]
     val_set = list_[train_num:]
