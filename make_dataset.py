@@ -8,8 +8,8 @@ from breezevertex.data import LabelMeDataset
 
 
 if __name__ == '__main__':
-    dataset = LabelMeDataset("/Users/tunm/datasets/oinbagCrawler_vertex/data", mode='test', is_show=True)
-    save_path = "/Users/tunm/datasets/oinbagCrawler_vertex_train"
+    dataset = LabelMeDataset("/data/jack_ssd/home/jack/tunm/work/ccpd_vertex_data/data", mode='test', is_show=True)
+    save_path = "/data/jack_ssd/home/jack/tunm/work/ccpd_vertex_data_train"
     train_dir = os.path.join(save_path, "train")
     val_dir = os.path.join(save_path, "val")
     os.makedirs(train_dir, exist_ok=True)
