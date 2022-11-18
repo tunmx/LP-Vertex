@@ -53,12 +53,14 @@ class TrainTask(object):
                    job_type="training",
                    reinit=True)
 
-    def _upload_images_(self, show_images):
+    def _upload_images_(self, show_images, step):
         if self.upload:
+            list_ = list()
             for img in show_images:
-                wandb.log({
-                    "results": wandb.Image(img)
-                })
+                list_.append(img)
+            wandb.log({
+                "results": list_
+            }, step=step)
 
 
     def _load_pretraining_model(self, weight_path=None):
@@ -85,11 +87,11 @@ class TrainTask(object):
         for epoch in range(epoch_num):
             # train set
             train_loss = self.train_one_epoch(train_data, epoch, epoch_num)
-            wandb.log({'train_loss': train_loss}, step=epoch)
+            wandb.log({'train_loss': train_loss}, step=epoch + 1)
             # val set
             self.upload = True
-            val_loss = self.validation_one_epoch(val_data)
-            wandb.log({'val_loss': val_loss}, step=epoch)
+            val_loss = self.validation_one_epoch(val_data, epoch)
+            wandb.log({'val_loss': val_loss}, step=epoch + 1)
             logger.info(f"Train Epoch[{epoch + 1}/{epoch_num}] val_loss: {val_loss}")
             if is_save:
                 self.save_model(val_loss, epoch, mode='min')
@@ -128,7 +130,7 @@ class TrainTask(object):
 
         return loss.item()
 
-    def validation_one_epoch(self, val_data):
+    def validation_one_epoch(self, val_data, epoch):
         self.model.eval()
         val_loss = 0.0
         # val_acc = 0.0
@@ -145,7 +147,7 @@ class TrainTask(object):
                 val_bar.set_description(
                     'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
                 show_images = visual_images(val_images.cpu()[:4], outputs.cpu()[:4], 112, 112)
-                self._upload_images_(show_images)
+                self._upload_images_(show_images, epoch + 1)
                 self.upload = False
 
 
