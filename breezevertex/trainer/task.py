@@ -1,5 +1,7 @@
 import copy
 import os
+import random
+
 import torch
 from tqdm import tqdm
 from breezevertex.model.loss import get_loss_function
@@ -9,6 +11,7 @@ from torch.utils.data import DataLoader
 from loguru import logger
 import wandb
 import socket
+from breezevertex.utils.image_tools import visual_images
 
 
 class TrainTask(object):
@@ -35,6 +38,7 @@ class TrainTask(object):
 
     def _wandb_log_init_(self, wandb_cfg):
         dir_path = os.path.join(self.save_dir, wandb_cfg['folder'])
+        os.makedirs(dir_path, exist_ok=True)
         wandb_init_config = dict(team_name=wandb_cfg['team_name'], project_name=wandb_cfg['project_name'],
                                  experiment_name=wandb_cfg['experiment_name'], scenario_name=wandb_cfg['scenario_name'])
         if wandb_cfg:
@@ -121,6 +125,7 @@ class TrainTask(object):
         with torch.no_grad():
             val_bar = tqdm(val_data)
             logger.info(f"Learning Rate: {self.optimizer.state_dict()['param_groups'][0]['lr']}")
+            show_images_list = list()
             for step, data in enumerate(val_bar):
                 val_images, val_labels = data
                 # val_images[0] = np.
@@ -130,6 +135,15 @@ class TrainTask(object):
 
                 val_bar.set_description(
                     'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
+                show_images = visual_images(val_images, outputs, 112, 112)
+                show_images_list += show_images
+            random.shuffle(show_images_list)
+            for idx in range(16):
+                img = show_images_list[idx]
+                wandb.log({
+                    "results": wandb.Image(img)
+                })
+
 
         return val_loss / len(val_bar)
 
