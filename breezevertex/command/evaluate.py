@@ -6,14 +6,14 @@ from breezevertex.utils.cfg_tools import load_cfg
 from breezevertex.model import build_model
 from breezevertex.data import get_dataset
 from breezevertex.data import Pipeline
+from breezevertex.model.loss import get_loss_function
 import torch
 from torch.utils.data import DataLoader
-from breezevertex.model.loss import get_loss_function
 
 __all__ = ['evaluate']
 
 
-@click.command(help='Evaluation')
+@click.command(help='Evaluate the trained model.')
 @click.argument('config_path', type=click.Path(exists=True))
 @click.option('-model_path', '--model_path', default=None, type=click.Path())
 @click.option('-data', '--data', default=None, type=click.Path())

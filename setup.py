@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from setuptools import find_packages, setup
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 if __name__ == "__main__":
     setup(
@@ -24,4 +24,8 @@ if __name__ == "__main__":
         ],
         license="Apache License 2.0",
         zip_safe=False,
+        entry_points="""
+            [console_scripts]
+            bvt=breezevertex.command.cli:cli
+        """
     )

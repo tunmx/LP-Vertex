@@ -12,7 +12,7 @@ from torch.utils.data import DataLoader
 __all__ = ['train']
 
 
-@click.command(help='Training')
+@click.command(help='Perform model training tasks.')
 @click.argument('config_path', type=click.Path(exists=True))
 def train(config_path, ):
     cfg = load_cfg(config_path)

@@ -12,7 +12,7 @@ from torch.utils.data import DataLoader
 __all__ = ['transform']
 
 
-@click.command(help='Evaluation')
+@click.command(help='View the transformed data set.')
 @click.argument('config_path', type=click.Path(exists=True))
 @click.option('-data', '--data', default=None, type=click.Path())
 def transform(config_path, data):

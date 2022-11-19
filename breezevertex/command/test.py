@@ -13,7 +13,7 @@ import torch
 __all__ = ['test']
 
 
-@click.command(help='Test')
+@click.command(help='Test the trained model.')
 @click.argument('config_path', type=click.Path(exists=True))
 @click.option('-model_path', '--model_path', default=None, type=click.Path())
 @click.option('-data', '--data', default=None, type=click.Path())
