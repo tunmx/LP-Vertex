@@ -1,5 +1,6 @@
 .idea/
 oinbagCrawler_vertex_train
+ccpd_vertex_data_train
 save_dir*/
 __pycache__
 build
