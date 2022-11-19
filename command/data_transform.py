@@ -1,21 +1,21 @@
 import os
 import click
+import cv2
 import tqdm
 from loguru import logger
 from breezevertex.utils.cfg_tools import load_cfg
+from breezevertex.utils.image_tools import visual_images
 from breezevertex.data import get_dataset
 from breezevertex.data import Pipeline
 from torch.utils.data import DataLoader
-import torch
 
-__all__ = ['data_transform']
+__all__ = ['transform']
 
 
 @click.command(help='Evaluation')
 @click.argument('config_path', type=click.Path(exists=True))
 @click.option('-data', '--data', default=None, type=click.Path())
-@click.option("-show", "--show", is_flag=True, type=click.BOOL, )
-def data_transform(config_path, data, show):
+def transform(config_path, data):
     logger.info("data_transform")
     cfg = load_cfg(config_path)
     # load data
@@ -30,9 +30,14 @@ def data_transform(config_path, data, show):
                             num_workers=4)
 
     transform_data = tqdm.tqdm(dataloader)
-    data = next(iter(transform_data))
-    print(data.shape)
+    images_tensor, kps_tensor = next(iter(transform_data))
+    _, _, h, w = images_tensor.shape
+    draw_images = visual_images(images_tensor, kps_tensor, w, h, swap=False)
+    for img in draw_images:
+        cv2.imshow("img", img)
+        cv2.waitKey(0)
+
 
 
 if __name__ == '__main__':
-    data_transform()
+    transform()
