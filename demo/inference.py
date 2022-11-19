@@ -7,9 +7,9 @@ from tqdm import tqdm
 
 
 def backend_matching(backend):
-    tabel = dict(torch=bvt.BACKEND_TORCH, onnx=bvt.BACKEND_ONNXRUNTIME, mnn=bvt.BACKEND_MNN)
+    table = dict(torch=bvt.BACKEND_TORCH, onnx=bvt.BACKEND_ONNXRUNTIME, mnn=bvt.BACKEND_MNN)
 
-    return tabel[backend]
+    return table[backend]
 
 
 @click.command(help='Exec inference flow.')
