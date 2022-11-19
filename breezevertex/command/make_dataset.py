@@ -11,8 +11,8 @@ __all__ = ['make']
 
 
 @click.command(help="Create a data set for training.")
-@click.argument('path', type=click.Path(exists=True))
-@click.argument('save_path', type=click.Path())
+@click.option('--path', type=click.Path(exists=True))
+@click.option('--save_path', type=click.Path())
 @click.option('-split_rate', '--split_rate', default=0.95, type=float)
 def make(path, save_path, split_rate):
     dataset = LabelMeDataset(path, mode='test', is_show=True)

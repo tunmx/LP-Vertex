@@ -52,13 +52,13 @@ class TrainTask(object):
                    job_type="training",
                    reinit=True)
 
-    def _upload_images_(self, image, step):
+    def _upload_images_(self, image: np.ndarray, step: int):
         if self.upload:
             wandb.log({
                 "results": wandb.Image(image)
             }, step=step)
 
-    def _load_pretraining_model(self, weight_path=None):
+    def _load_pretraining_model(self, weight_path: str = None):
         # Load the pre-training model
         logger.info('loading pretraining model {}'.format(weight_path))
         pretrained_dict = torch.load(weight_path)
@@ -75,7 +75,7 @@ class TrainTask(object):
         # for param in self.model.features.parameters():
         #     param.requires_grad = False
 
-    def training(self, train_data: DataLoader, val_data: DataLoader, epoch_num: int, is_save=True):
+    def training(self, train_data: DataLoader, val_data: DataLoader, epoch_num: int, is_save: bool = True):
         logger.info("Start training.")
         logger.info(f"Training Epochs Total: {epoch_num}")
         logger.info(f"Training Result Save to {self.save_dir}")
@@ -125,10 +125,9 @@ class TrainTask(object):
 
         return loss.item()
 
-    def validation_one_epoch(self, val_data, epoch):
+    def validation_one_epoch(self, val_data, epoch) -> float:
         self.model.eval()
         val_loss = 0.0
-        # val_acc = 0.0
         with torch.no_grad():
             val_bar = tqdm(val_data)
             logger.info(f"Learning Rate: {self.optimizer.state_dict()['param_groups'][0]['lr']}")
@@ -143,7 +142,8 @@ class TrainTask(object):
                     'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
                 show_images = visual_images(val_images.cpu()[:16], outputs.cpu()[:16], 112, 112)
                 show_images = np.asarray(show_images)
-                sq_images = images_to_square(show_images)
+                # sq_images = images_to_square(show_images)
+                sq_images = np.asarray(show_images)
                 self._upload_images_(sq_images, epoch + 1)
                 self.upload = False
 
@@ -151,7 +151,7 @@ class TrainTask(object):
         return val_loss / len(val_bar)
 
     @staticmethod
-    def _configure_optimizers(model, optimizer_option: dict, lr_schedule_option: dict):
+    def _configure_optimizers(model, optimizer_option: dict, lr_schedule_option: dict) -> tuple:
         optimizer_cfg = copy.deepcopy(optimizer_option)
         logger.info("loading optimizer {}".format(optimizer_cfg.get('name')))
         name = optimizer_cfg.pop('name')

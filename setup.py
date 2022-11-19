@@ -11,8 +11,8 @@ if __name__ == "__main__":
         url="https://github.com/tunmx/LP-Vertex",
         author="Tunm",
         author_email="tunmxy@163.com",
-        keywords="deep learning",
-        # packages=find_packages(exclude=("config", "tools", "demo")),
+        keywords="Deep Learning",
+        # packages=find_packages(exclude=("config", "demo")),
         classifiers=[
             "Development Status :: Beta",
             "License :: OSI Approved :: Apache Software License",
