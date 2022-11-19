@@ -151,7 +151,7 @@ class TrainTask(object):
         return val_loss / len(val_bar)
 
     @staticmethod
-    def _configure_optimizers(model, optimizer_option, lr_schedule_option):
+    def _configure_optimizers(model, optimizer_option: dict, lr_schedule_option: dict):
         optimizer_cfg = copy.deepcopy(optimizer_option)
         logger.info("loading optimizer {}".format(optimizer_cfg.get('name')))
         name = optimizer_cfg.pop('name')

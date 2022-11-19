@@ -27,7 +27,7 @@ def transform(config_path, data):
     dataset = get_dataset(data_cfg.val.name, transform=transform, **data_cfg.val.option)
     batch_size = data_cfg.val.batch_size
     dataloader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True,
-                            num_workers=4)
+                            num_workers=0)
 
     transform_data = tqdm.tqdm(dataloader)
     images_tensor, kps_tensor = next(iter(transform_data))

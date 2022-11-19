@@ -6,6 +6,7 @@ from breezevertex.command.make_dataset import make
 from breezevertex.command.data_transform import transform
 from breezevertex.command.visual_model import visual
 from breezevertex.command.generate import generate
+from breezevertex.command.export import export
 import click
 
 __all__ = ['cli']
@@ -25,6 +26,7 @@ cli.add_command(make)
 cli.add_command(transform)
 cli.add_command(visual)
 cli.add_command(generate)
+cli.add_command(export)
 
 if __name__ == '__main__':
     cli()

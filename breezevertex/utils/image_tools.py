@@ -21,7 +21,6 @@ def images_to_square(images, pad=4, resize_pad=None):
     return square
 
 
-
 def encode_images(image: np.ndarray):
     image_encode = image / 255.0
     if len(image_encode.shape) == 4:
