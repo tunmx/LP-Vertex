@@ -1,7 +1,5 @@
 import copy
 import os
-import random
-
 import numpy as np
 import torch
 from tqdm import tqdm
@@ -12,7 +10,7 @@ from torch.utils.data import DataLoader
 from loguru import logger
 import wandb
 import socket
-from breezevertex.utils.image_tools import visual_images
+from breezevertex.utils.image_tools import visual_images, images_to_square
 
 
 class TrainTask(object):
@@ -54,13 +52,11 @@ class TrainTask(object):
                    job_type="training",
                    reinit=True)
 
-    def _upload_images_(self, show_images, step):
+    def _upload_images_(self, image, step):
         if self.upload:
-            list_ = np.concatenate(show_images, axis=1)
             wandb.log({
-                "results": wandb.Image(list_)
+                "results": wandb.Image(image)
             }, step=step)
-
 
     def _load_pretraining_model(self, weight_path=None):
         # Load the pre-training model
@@ -145,10 +141,11 @@ class TrainTask(object):
 
                 val_bar.set_description(
                     'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
-                show_images = visual_images(val_images.cpu()[:4], outputs.cpu()[:4], 112, 112)
-                self._upload_images_(show_images, epoch + 1)
+                show_images = visual_images(val_images.cpu()[:16], outputs.cpu()[:16], 112, 112)
+                show_images = np.asarray(show_images)
+                sq_images = images_to_square(show_images)
+                self._upload_images_(sq_images, epoch + 1)
                 self.upload = False
-
 
         return val_loss / len(val_bar)
 

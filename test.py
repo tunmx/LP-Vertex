@@ -8,7 +8,7 @@ import torch
 
 device = torch.device("cpu")
 net = ResNetVertex(50)
-net.load_state_dict(torch.load("save_dir_r50/best_model.pth", map_location="cpu"))
+net.load_state_dict(torch.load("workspace/resnet50_with_ccpd/best_model.pth", map_location="cpu"))
 net.to(device)
 
 batch_size = 128

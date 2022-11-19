@@ -13,7 +13,7 @@ __all__ = ['train']
 
 
 @click.command(help='Training')
-@click.argument('config_path')
+@click.argument('config_path', type=click.Path(exists=True))
 def train(config_path, ):
     cfg = load_cfg(config_path)
     print(cfg)
