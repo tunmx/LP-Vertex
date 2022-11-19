@@ -132,6 +132,7 @@ class TrainTask(object):
         with torch.no_grad():
             val_bar = tqdm(val_data)
             logger.info(f"Learning Rate: {self.optimizer.state_dict()['param_groups'][0]['lr']}")
+            wandb.log({'lr': self.optimizer.state_dict()['param_groups'][0]['lr']}, step=epoch + 1)
             for step, data in enumerate(val_bar):
                 val_images, val_labels = data
                 # val_images[0] = np.
