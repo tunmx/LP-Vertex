@@ -13,7 +13,7 @@ import torch
 __all__ = ['test']
 
 
-@click.command(help='Training')
+@click.command(help='Test')
 @click.argument('config_path', type=click.Path(exists=True))
 @click.option('-model_path', '--model_path', default=None, type=click.Path())
 @click.option('-data', '--data', default=None, type=click.Path())
@@ -74,7 +74,6 @@ def test(config_path, model_path, data, show, square):
         kps[:, 1] *= h
 
         for x, y in kps.astype(np.int32):
-            # print(x, y)
             cv2.line(image, (x, y), (x, y), (100, 100, 255), 3)
 
         if square:
@@ -86,13 +85,16 @@ def test(config_path, model_path, data, show, square):
                 pad = images_to_square(show_list)
                 show_list = list()
 
-                cv2.imshow("w", pad)
-                cv2.waitKey(0)
+                cv2.imwrite(os.path.join(save_dir, str(idx) + '.jpg'), pad)
+
+                if show:
+                    cv2.imshow("w", pad)
+                    cv2.waitKey(0)
         else:
-
-            cv2.imshow("w", image)
-            cv2.waitKey(0)
-
+            cv2.imwrite(os.path.join(save_dir, os.path.basename(path)), image)
+            if show:
+                cv2.imshow("w", image)
+                cv2.waitKey(0)
 
 
 if __name__ == '__main__':

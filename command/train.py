@@ -28,7 +28,7 @@ def train(config_path, ):
     train_dataset = get_dataset(data_cfg.train.name, transform=transform, **data_cfg.train.option)
     train_batch_size = data_cfg.train.batch_size
     # build val dataset
-    val_dataset = get_dataset(data_cfg.val.name, **data_cfg.val.option)
+    val_dataset = get_dataset(data_cfg.val.name, transform=transform, **data_cfg.val.option)
     val_batch_size = data_cfg.val.batch_size
     logger.info(f"Training Dataset Total: {len(train_dataset)}")
     logger.info(f"Verification Dataset Total: {len(val_dataset)}")
