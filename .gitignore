@@ -8,3 +8,4 @@ dist
 MANIFEST
 *.egg-info
 workspace
+outputs_dir

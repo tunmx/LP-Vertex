@@ -43,7 +43,8 @@ def export_onnx(net, model_save, input_shape: tuple):
 @click.option('-model_save', '--model_save', default=None, type=click.Path())
 @click.option('-input_shape', '--input_shape', default=None, multiple=True, nargs=2, type=int)
 def export(model, config, model_path, model_save, input_shape):
-    input_shape = input_shape[0]
+    if input_shape:
+        input_shape = input_shape[0]
     logger.info("export")
     cfg = load_cfg(config)
     print(cfg)
