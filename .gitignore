@@ -9,3 +9,4 @@ MANIFEST
 *.egg-info
 workspace
 outputs_dir
+data_dir/
