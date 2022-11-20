@@ -1,5 +1,7 @@
 import copy
 import os
+
+import cv2
 import numpy as np
 import torch
 from tqdm import tqdm
@@ -52,10 +54,19 @@ class TrainTask(object):
                    job_type="training",
                    reinit=True)
 
-    def _upload_images_(self, image: np.ndarray, step: int):
+    def _upload_images_(self, images: np.ndarray, step: int):
+        img_list = list()
+        if len(images.shape) == 4:
+            for img in images:
+                rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                img_list.append(wandb.Image(rgb))
+        elif len(images.shape) == 3:
+            img_list.append(wandb.Image(cv2.cvtColor(images, cv2.COLOR_BGR2RGB)))
+        else:
+            pass
         if self.upload:
             wandb.log({
-                "results": wandb.Image(image)
+                "results": images
             }, step=step)
 
     def _load_pretraining_model(self, weight_path: str = None):
