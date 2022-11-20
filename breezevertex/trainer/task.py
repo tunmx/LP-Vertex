@@ -52,16 +52,16 @@ class TrainTask(object):
                    group="training",
                    dir=dir_path,
                    job_type="training",
-                   reinit=True)
+                   reinit=True,
+                )
 
     def _upload_images_(self, images: np.ndarray, step: int):
         img_list = list()
         if len(images.shape) == 4:
             for img in images:
-                rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                img_list.append(wandb.Image(rgb))
+                img_list.append(wandb.Image(img))
         elif len(images.shape) == 3:
-            img_list.append(wandb.Image(cv2.cvtColor(images, cv2.COLOR_BGR2RGB)))
+            img_list.append(wandb.Image(images))
         else:
             pass
         if self.upload:
@@ -151,7 +151,7 @@ class TrainTask(object):
 
                 val_bar.set_description(
                     'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
-                show_images = visual_images(val_images.cpu()[:9], outputs.cpu()[:9], 112, 112)
+                show_images = visual_images(val_images.cpu()[:6], outputs.cpu()[:6], 112, 112)
                 show_images = np.asarray(show_images)
                 # sq_images = images_to_square(show_images)
                 sq_images = np.asarray(show_images)
