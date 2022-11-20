@@ -151,7 +151,7 @@ class TrainTask(object):
 
                 val_bar.set_description(
                     'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
-                show_images = visual_images(val_images.cpu()[:16], outputs.cpu()[:16], 112, 112)
+                show_images = visual_images(val_images.cpu()[:4], outputs.cpu()[:4], 112, 112)
                 show_images = np.asarray(show_images)
                 # sq_images = images_to_square(show_images)
                 sq_images = np.asarray(show_images)
