@@ -1,4 +1,4 @@
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 import cv2
 import numpy as np
 from torch.utils.data import Dataset
@@ -30,9 +30,11 @@ class VertexDatasetBase(Dataset, metaclass=ABCMeta):
         else:
             return self._get_train_data(idx)
 
+    @abstractmethod
     def _load_data(self, img_path: str, labels_path: str) -> list:
         pass
 
+    @abstractmethod
     def _load_label(self, path: str) -> dict:
         pass
 
