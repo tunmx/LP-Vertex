@@ -101,3 +101,8 @@ Execute the export instruction to export the onnx model.
 bvt export onnx --config CONFIG_PATH  --input_shape 112 112
 ```
 
+## Example
+
+License plate vertex example.
+
+![plate](images/exa1.jpg)
