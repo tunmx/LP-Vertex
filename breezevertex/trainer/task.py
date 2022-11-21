@@ -66,7 +66,7 @@ class TrainTask(object):
             img_list.append(wandb.Image(images))
         else:
             pass
-        if gt_list:
+        if images_gt is not None:
             # show gt images
             if len(images_gt.shape) == 4:
                 for img in images_gt:
