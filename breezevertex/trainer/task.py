@@ -16,6 +16,7 @@ from breezevertex.utils.image_tools import visual_images, images_to_square
 
 SHOW_IMAGE_NUM = 6
 
+
 class TrainTask(object):
     def __init__(self, model, save_dir, loss_func, optimizer_option, lr_schedule_option, wandb_cfg, weight_path=None):
         self.save_dir = save_dir
@@ -170,7 +171,8 @@ class TrainTask(object):
                     'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
                 predict_images = visual_images(val_images.cpu()[:SHOW_IMAGE_NUM], outputs.cpu()[:SHOW_IMAGE_NUM], w, h)
                 predict_images = np.asarray(predict_images)
-                gt_images = visual_images(val_images.cpu()[:SHOW_IMAGE_NUM], val_labels.cpu()[:SHOW_IMAGE_NUM], w, h, is_val=True)
+                gt_images = visual_images(val_images.cpu()[:SHOW_IMAGE_NUM], val_labels.cpu()[:SHOW_IMAGE_NUM], w, h,
+                                          is_val=True)
                 gt_images = np.asarray(gt_images)
                 self._upload_images_(predict_images, epoch + 1, images_gt=gt_images)
                 self.upload = False
@@ -202,7 +204,7 @@ class TrainTask(object):
             if loss < self.best_loss:
                 # torch.save(self.model.state_dict(), os.path.join(
                 #     self.save_dir, 'model_%d_loss%0.3f.pth' % (epoch + 1, loss)))
-                with open("best_epoch.txt", 'w') as f:
+                with open(os.path.join(self.save_dir, "best_epoch.txt"), 'w') as f:
                     f.write(f"{epoch}: {loss}\n")
                 torch.save(self.model.state_dict(), os.path.join(
                     self.save_dir, 'best_model.pth'))
