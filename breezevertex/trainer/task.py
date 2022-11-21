@@ -1,6 +1,5 @@
 import copy
 import os
-
 import cv2
 import numpy as np
 import torch
@@ -161,7 +160,7 @@ class TrainTask(object):
             val_bar = tqdm(val_data)
             for step, data in enumerate(val_bar):
                 val_images, val_labels = data
-                n, c, h, w = val_labels.shape
+                n, c, h, w = val_images.shape
                 # val_images[0] = np.
                 outputs = self.model(val_images.to(self.task_device))
                 loss = self.loss_func(outputs, val_labels.to(self.task_device))
