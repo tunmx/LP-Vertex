@@ -53,10 +53,11 @@ class TrainTask(object):
                    dir=dir_path,
                    job_type="training",
                    reinit=True,
-                )
+                   )
 
-    def _upload_images_(self, images: np.ndarray, step: int):
+    def _upload_images_(self, images: np.ndarray, step: int, images_gt: np.ndarray = None, ):
         img_list = list()
+        gt_list = list()
         if len(images.shape) == 4:
             for img in images:
                 img_list.append(wandb.Image(img))
@@ -64,10 +65,24 @@ class TrainTask(object):
             img_list.append(wandb.Image(images))
         else:
             pass
+        if images_gt:
+            # show gt images
+            if len(images_gt.shape) == 4:
+                for img in images_gt:
+                    gt_list.append(wandb.Image(img))
+            elif len(images_gt.shape) == 3:
+                gt_list.append(wandb.Image(images_gt))
+            else:
+                pass
         if self.upload:
             wandb.log({
                 "results": img_list
             }, step=step)
+
+            if gt_list:
+                wandb.log({
+                    "ground truth": gt_list
+                }, step=step)
 
     def _load_pretraining_model(self, weight_path: str = None):
         # Load the pre-training model
@@ -151,11 +166,11 @@ class TrainTask(object):
 
                 val_bar.set_description(
                     'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
-                show_images = visual_images(val_images.cpu()[:6], outputs.cpu()[:6], 112, 112)
-                show_images = np.asarray(show_images)
-                # sq_images = images_to_square(show_images)
-                sq_images = np.asarray(show_images)
-                self._upload_images_(sq_images, epoch + 1)
+                predict_images = visual_images(val_images.cpu()[:6], outputs.cpu()[:6], 112, 112)
+                predict_images = np.asarray(predict_images)
+                gt_images = visual_images(val_images.cpu()[:6], val_labels.cpu()[:6], 112, 112)
+                gt_images = np.asarray(gt_images)
+                self._upload_images_(predict_images, epoch + 1, images_gt=gt_images)
                 self.upload = False
 
         wandb.log({'lr': self.optimizer.state_dict()['param_groups'][0]['lr']}, step=epoch + 1)
