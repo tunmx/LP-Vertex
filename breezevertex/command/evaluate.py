@@ -45,7 +45,7 @@ def evaluate(config_path, model_path, data):
     val_dataset = get_dataset(data_cfg.val.name, transform=transform, **data_cfg.val.option)
     val_batch_size = data_cfg.val.batch_size
     val_dataloader = DataLoader(dataset=val_dataset, batch_size=val_batch_size, shuffle=True,
-                                num_workers=4)
+                                num_workers=0)
 
     val_loss = 0.0
     val_bar = tqdm.tqdm(val_dataloader)

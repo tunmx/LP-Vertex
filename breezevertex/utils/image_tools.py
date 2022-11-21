@@ -52,7 +52,7 @@ def decode_points(label_tensor, w, h):
 colors = [(100, 100, 255), (10, 255, 100), (100, 190, 240), (100, 255, 255)]
 
 
-def visual_images(images_tensor, label_tensor, w, h, swap=True):
+def visual_images(images_tensor, label_tensor, w, h, swap=True, is_val=False):
     images = decode_images(images_tensor)
     kps = decode_points(label_tensor, w, h)
     list_ = list()
@@ -61,7 +61,10 @@ def visual_images(images_tensor, label_tensor, w, h, swap=True):
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         for i, p in enumerate(kps[idx].astype(np.int32)):
             x, y = p
-            cv2.line(img, (x, y), (x, y), colors[i], 3)
+            if is_val:
+                cv2.line(img, (x, y), (x, y), (0, 0, 255), 3)
+            else:
+                cv2.line(img, (x, y), (x, y), colors[i], 3)
         list_.append(img)
 
     return list_

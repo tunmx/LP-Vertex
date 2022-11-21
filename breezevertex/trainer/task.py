@@ -170,7 +170,7 @@ class TrainTask(object):
                     'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
                 predict_images = visual_images(val_images.cpu()[:SHOW_IMAGE_NUM], outputs.cpu()[:SHOW_IMAGE_NUM], w, h)
                 predict_images = np.asarray(predict_images)
-                gt_images = visual_images(val_images.cpu()[:SHOW_IMAGE_NUM], val_labels.cpu()[:SHOW_IMAGE_NUM], w, h)
+                gt_images = visual_images(val_images.cpu()[:SHOW_IMAGE_NUM], val_labels.cpu()[:SHOW_IMAGE_NUM], w, h, is_val=True)
                 gt_images = np.asarray(gt_images)
                 self._upload_images_(predict_images, epoch + 1, images_gt=gt_images)
                 self.upload = False
