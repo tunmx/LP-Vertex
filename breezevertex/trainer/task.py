@@ -14,6 +14,7 @@ import wandb
 import socket
 from breezevertex.utils.image_tools import visual_images, images_to_square
 
+SHOW_IMAGE_NUM = 6
 
 class TrainTask(object):
     def __init__(self, model, save_dir, loss_func, optimizer_option, lr_schedule_option, wandb_cfg, weight_path=None):
@@ -159,6 +160,7 @@ class TrainTask(object):
             val_bar = tqdm(val_data)
             for step, data in enumerate(val_bar):
                 val_images, val_labels = data
+                n, c, h, w = val_labels.shape
                 # val_images[0] = np.
                 outputs = self.model(val_images.to(self.task_device))
                 loss = self.loss_func(outputs, val_labels.to(self.task_device))
@@ -166,9 +168,9 @@ class TrainTask(object):
 
                 val_bar.set_description(
                     'Val: loss: {:.3f}'.format(val_loss / (step + 1)))
-                predict_images = visual_images(val_images.cpu()[:6], outputs.cpu()[:6], 112, 112)
+                predict_images = visual_images(val_images.cpu()[:SHOW_IMAGE_NUM], outputs.cpu()[:SHOW_IMAGE_NUM], w, h)
                 predict_images = np.asarray(predict_images)
-                gt_images = visual_images(val_images.cpu()[:6], val_labels.cpu()[:6], 112, 112)
+                gt_images = visual_images(val_images.cpu()[:SHOW_IMAGE_NUM], val_labels.cpu()[:SHOW_IMAGE_NUM], w, h)
                 gt_images = np.asarray(gt_images)
                 self._upload_images_(predict_images, epoch + 1, images_gt=gt_images)
                 self.upload = False
