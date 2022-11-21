@@ -34,8 +34,8 @@ def train(config_path, ):
     logger.info(f"Verification Dataset Total: {len(val_dataset)}")
     # create dataloader
     trainer_cfg = cfg.trainer
-    train_dataloader = DataLoader(dataset=train_dataset, batch_size=train_batch_size, shuffle=True, num_workers=trainer_cfg.worker_num)
-    val_dataloader = DataLoader(dataset=val_dataset, batch_size=val_batch_size, shuffle=True, num_workers=trainer_cfg.worker_num)
+    train_dataloader = DataLoader(dataset=train_dataset, batch_size=train_batch_size, shuffle=True, num_workers=trainer_cfg.worker_num, pin_memory=True)
+    val_dataloader = DataLoader(dataset=val_dataset, batch_size=val_batch_size, shuffle=True, num_workers=trainer_cfg.worker_num, pin_memory=True)
     # build trainer
     task_option = dict(model=net, save_dir=cfg.save_dir, loss_func=model_cfg.loss.name,
                        lr_schedule_option=trainer_cfg.schedule, optimizer_option=trainer_cfg.optimizer, wandb_cfg=cfg.wandb,
