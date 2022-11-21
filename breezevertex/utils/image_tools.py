@@ -66,7 +66,7 @@ def visual_images(images_tensor, label_tensor, w, h, swap=True, is_val=False):
             else:
                 cv2.line(img, (x, y), (x, y), colors[i], 3)
 
-            cv2.polylines(img, kps.astype(np.int32), True, (255, 0, 0), 2, )
+            cv2.polylines(img, [kps[idx].astype(np.int32)], True, (255, 0, 0), 1, )
         list_.append(img)
 
     return list_
