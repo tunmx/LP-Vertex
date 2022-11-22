@@ -16,6 +16,7 @@ class MobileVertex(nn.Module):
 
     def __init__(self, width_mult=1., last_channel=1280, pool_pad=4):
         super().__init__()
+        print('width_mult: ', width_mult)
         self.backbone = MobileNetV2(width_mult=width_mult, last_channel=last_channel)
         # self.conv_1x1 = conv_1x1_bn(1280, 512)
         self.pool1 = nn.AvgPool2d(pool_pad, stride=1)
