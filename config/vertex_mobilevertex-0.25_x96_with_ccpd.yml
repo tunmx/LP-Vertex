@@ -3,6 +3,8 @@ model:
   name: MobileVertex
   option:
     width_mult: 0.25
+    last_channel: 1280
+    pool_pad: 3
   loss:
     name: mse_loss
   weight: null

@@ -2,6 +2,7 @@ import click
 from loguru import logger
 from breezevertex.utils.cfg_tools import load_cfg
 from breezevertex.model import build_model
+import torch
 
 __all__ = ['visual']
 
@@ -16,3 +17,5 @@ def visual(config_path):
     model_cfg = cfg.model
     net = build_model(model_cfg.name, **model_cfg.option)
     print(net)
+    x = torch.rand(1, 3, cfg.data.pipeline.image_size[0], cfg.data.pipeline.image_size[1])
+    print(net(x))
