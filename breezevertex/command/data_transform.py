@@ -15,17 +15,16 @@ __all__ = ['transform']
 @click.command(help='View the transformed data set.')
 @click.argument('config_path', type=click.Path(exists=True))
 @click.option('-data', '--data', default=None, type=click.Path())
-def transform(config_path, data):
+def transform(config_path, data, ):
     logger.info("data_transform")
     cfg = load_cfg(config_path)
     # load data
     data_cfg = cfg.data
     if data:
-        data_cfg.val.option.img_path = data
-    # build val dataset
+        data_cfg.train.option.img_path = data
     pipeline = Pipeline(**data_cfg.pipeline)
-    dataset = get_dataset(data_cfg.val.name, transform=pipeline, **data_cfg.val.option)
-    batch_size = data_cfg.val.batch_size
+    dataset = get_dataset(data_cfg.train.name, transform=pipeline, **data_cfg.train.option)
+    batch_size = data_cfg.train.batch_size
     dataloader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True,
                             num_workers=0)
 
