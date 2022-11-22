@@ -23,8 +23,8 @@ def transform(config_path, data):
     if data:
         data_cfg.val.option.img_path = data
     # build val dataset
-    transform = Pipeline(**data_cfg.pipeline)
-    dataset = get_dataset(data_cfg.val.name, transform=transform, **data_cfg.val.option)
+    pipeline = Pipeline(**data_cfg.pipeline)
+    dataset = get_dataset(data_cfg.val.name, transform=pipeline, **data_cfg.val.option)
     batch_size = data_cfg.val.batch_size
     dataloader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True,
                             num_workers=0)
@@ -34,6 +34,7 @@ def transform(config_path, data):
     _, _, h, w = images_tensor.shape
     draw_images = visual_images(images_tensor, kps_tensor, w, h, swap=False)
     for img in draw_images:
+        print(img.shape)
         cv2.imshow("img", img)
         cv2.waitKey(0)
 

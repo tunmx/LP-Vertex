@@ -135,6 +135,7 @@ class TrainTask(object):
             samples = samples.to(self.task_device)
             labels = labels.to(self.task_device)
             self.optimizer.zero_grad()
+            print('shape: ', samples.shape)
             outputs = self.model(samples.to(self.task_device))
             # print("debug: outputs", outputs.shape)
             # print("outputs: labels", labels.shape)
