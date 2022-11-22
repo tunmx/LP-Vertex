@@ -28,13 +28,13 @@ class MobileVertex(nn.Module):
     def forward(self, x):
         x = self.backbone(x)
         # x = self.conv_1x1(x)
-        print('bb: ', x.shape)
+        # print('bb: ', x.shape)
         x = self.pool1(x)
-        print('pool: ', x.shape)
+        # print('pool: ', x.shape)
         x = x.view(x.size(0), -1)
-        print('view: ', x.shape)
+        # print('view: ', x.shape)
         x = self.fc(x)
-        print('fc: ', x.shape)
+        # print('fc: ', x.shape)
         x = self.prelu1(x)
         x = self.kps(x)
 
