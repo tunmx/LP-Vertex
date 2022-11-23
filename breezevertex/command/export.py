@@ -38,16 +38,18 @@ def export_onnx(net, model_save, input_shape: tuple):
 
 @click.command(help='export model : onnx or ..')
 @click.argument('model', type=click.Choice(['onnx', 'mnn', 'ncnn', ]))
-@click.option('-config', '--config', default=None, type=click.Path(exists=True))
+@click.option('-config', '--config', type=click.Path(exists=True))
 @click.option('-model_path', '--model_path', default=None, type=click.Path())
 @click.option('-model_save', '--model_save', default=None, type=click.Path())
 @click.option('-input_shape', '--input_shape', default=None, multiple=True, nargs=2, type=int)
 def export(model, config, model_path, model_save, input_shape):
-    if input_shape:
-        input_shape = input_shape[0]
     logger.info("export")
     cfg = load_cfg(config)
     print(cfg)
+    if input_shape:
+        input_shape = input_shape[0]
+    else:
+        input_shape = tuple(cfg.data.pipeline.image_size)
     # build training model
     model_cfg = cfg.model
     if model_path is None:

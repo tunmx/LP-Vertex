@@ -24,7 +24,7 @@ def backend_matching(backend):
 def inference(backend, config, model_path, data, save_dir, input_shape, show):
     net = None
     backend_tag = backend_matching(backend)
-    if input_shape:
+    if input_shape is not None:
         input_size = input_shape[0]
     else:
         input_size = (112, 112)
@@ -51,7 +51,7 @@ def inference(backend, config, model_path, data, save_dir, input_shape, show):
     elif backend_tag == bvt.BACKEND_ONNXRUNTIME:
         assert model_path, 'Place input onnx model path.'
         infer = bvt.multiple_backend(bvt.BACKEND_ONNXRUNTIME)
-        net = infer(onnx_path=model_path)
+        net = infer(onnx_path=model_path, input_shape=input_size)
     else:
         return NotImplementedError('not implement backend.')
 
@@ -63,6 +63,7 @@ def inference(backend, config, model_path, data, save_dir, input_shape, show):
     sum_t = 0.0
     for path in tqdm(data_list):
         image = cv2.imread(path)
+        image = cv2.resize(image, input_size)
         t = time.time()
         kps = net(image)
         ut = time.time() - t
@@ -71,7 +72,8 @@ def inference(backend, config, model_path, data, save_dir, input_shape, show):
         kps[:, 0] = kps[:, 0] / input_size[1] * h
         kps[:, 1] = kps[:, 1] / input_size[0] * w
         for x, y in kps.astype(np.int32):
-            cv2.line(image, (x, y), (x, y), (80, 80, 240), 3)
+            cv2.line(image, (x, y), (x, y), (80, 240, 100), 3)
+        cv2.polylines(image, [kps.astype(np.int32)], True, (0, 0, 200), 1, )
         if show:
             cv2.imshow('image', image)
             cv2.waitKey(0)

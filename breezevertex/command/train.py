@@ -1,4 +1,5 @@
 import os
+import shutil
 
 import click
 from loguru import logger
@@ -19,6 +20,7 @@ def train(config_path, ):
     print(cfg)
     # create folder
     os.makedirs(cfg.save_dir, exist_ok=True)
+    shutil.copy(config_path, os.path.join(cfg.save_dir, os.path.basename(config_path)))
     # build training model
     model_cfg = cfg.model
     net = build_model(model_cfg.name, **model_cfg.option)
