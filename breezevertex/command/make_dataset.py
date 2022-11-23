@@ -14,7 +14,8 @@ __all__ = ['make']
 @click.option('--path', type=click.Path(exists=True))
 @click.option('--save_path', type=click.Path())
 @click.option('-split_rate', '--split_rate', default=0.95, type=float)
-def make(path, save_path, split_rate):
+@click.option('-suffix', '--suffix', type=str, default='json')
+def make(path, save_path, split_rate, suffix):
     dataset = LabelMeDataset(path, mode='test', is_show=True)
     train_dir = os.path.join(save_path, "train")
     val_dir = os.path.join(save_path, "val")
@@ -32,7 +33,7 @@ def make(path, save_path, split_rate):
 
     for item in tqdm.tqdm(train_set):
         img_path = item['image']
-        label_path = "".join(img_path.split(".")[:-1]) + ".json"
+        label_path = "".join(img_path.split(".")[:-1]) + f".{suffix}"
         dst_img = os.path.join(train_dir, os.path.basename(img_path))
         dst_label = os.path.join(train_dir, os.path.basename(label_path))
         shutil.copy(img_path, dst_img)
@@ -40,7 +41,7 @@ def make(path, save_path, split_rate):
 
     for item in tqdm.tqdm(val_set):
         img_path = item['image']
-        label_path = "".join(img_path.split(".")[:-1]) + ".json"
+        label_path = "".join(img_path.split(".")[:-1]) + f".{suffix}"
         dst_img = os.path.join(val_dir, os.path.basename(img_path))
         dst_label = os.path.join(val_dir, os.path.basename(label_path))
         shutil.copy(img_path, dst_img)
