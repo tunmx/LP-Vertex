@@ -9,6 +9,7 @@ from breezevertex.command.generate import generate
 from breezevertex.command.export import export
 import click
 
+
 __all__ = ['cli']
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
