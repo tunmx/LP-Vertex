@@ -1,3 +1,13 @@
+"""
+[-Benchmark-]
+Model           Input       Loss        use-time@corei7         ONNX-size
+--
+ResNet50        112x112     2.6e-4      23ms                    96.2M
+MNetV2:0.5      112x112     3.6e-4      5ms                     96.2M
+MNetV2:0.35     96x96       6.5e-4      1.7ms                    2.2M
+MNetV2:0.25     96x96       6.4e-4      1.3ms                    1.6M
+"""
+
 import cv2
 import numpy as np
 import breezevertex as bvt
@@ -81,6 +91,7 @@ def inference(backend, config, model_path, data, save_dir, input_shape, show):
             cv2.imwrite(os.path.join(save_dir, os.path.basename(path)), image)
 
     print(f"avg use time: {sum_t / len(data_list)}")
+
 
 if __name__ == '__main__':
     inference()
