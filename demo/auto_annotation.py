@@ -150,7 +150,6 @@ def inference(backend, config, model_path, data, save_dir, input_shape, show):
             with open(label_dst_path, 'w') as f:
                 json.dump(data_result, f, ensure_ascii=False, indent=4)
 
-    print(f"avg use time: {sum_t / len(data_list)}")
 
 
 if __name__ == '__main__':
