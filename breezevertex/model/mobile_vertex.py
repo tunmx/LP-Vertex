@@ -12,6 +12,31 @@ def conv_1x1_bn(inp, oup):
     )
 
 
+class MobileVertexWithClassify(nn.Module):
+    def __init__(self, class_num, width_mult=1., last_channel=1280, pool_pad=4):
+        super().__init__()
+        print('width_mult: ', width_mult, 'class_num: ', class_num)
+        self.backbone = MobileNetV2(width_mult=width_mult, last_channel=last_channel)
+        self.pool1 = nn.AvgPool2d(pool_pad, stride=1)
+        self.fc = nn.Linear(1280, 128)
+        self.prelu1 = nn.PReLU()
+        self.kps_rec = nn.Linear(128, 8)
+        self.cls_rec = nn.Linear(128, class_num)
+        self.softmax = nn.Softmax(dim=1)
+
+    def forward(self, x):
+        x = self.backbone(x)
+        x = self.pool1(x)
+        x = x.view(x.size(0), -1)
+        x = self.fc(x)
+        x = self.prelu1(x)
+        kps = self.kps_rec(x)
+        cls = self.cls_rec(x)
+        cls = self.softmax(cls)
+
+        return kps, cls
+
+
 class MobileVertex(nn.Module):
 
     def __init__(self, width_mult=1., last_channel=1280, pool_pad=4):
