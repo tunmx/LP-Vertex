@@ -66,6 +66,7 @@ class MobileVertex(nn.Module):
         return x
 
 
+
 if __name__ == '__main__':
     net = MobileVertex(0.5)
     # print(net)
